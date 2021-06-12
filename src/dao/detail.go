@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/cheolgyu/stock-read-http-api/src/db"
+	"github.com/cheolgyu/stock-read-pub-api/src/db"
 )
 
 var SqlDetail DetailDao

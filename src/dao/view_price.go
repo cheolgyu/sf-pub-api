@@ -6,8 +6,8 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/cheolgyu/stock-read-http-api/src/db"
-	"github.com/cheolgyu/stock-read-http-api/src/model"
+	"github.com/cheolgyu/stock-read-pub-api/src/db"
+	"github.com/cheolgyu/stock-read-pub-api/src/model"
 )
 
 var SqlViewPrice ViewPrice

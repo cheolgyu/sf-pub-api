@@ -1,4 +1,4 @@
-module github.com/cheolgyu/stock-read-http-api
+module github.com/cheolgyu/stock-read-pub-api
 
 go 1.16
 
