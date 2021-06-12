@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/cheolgyu/stock/backend/api/src/server"
+	"github.com/cheolgyu/stock-read-http-api/src/server"
 	"github.com/joho/godotenv"
 )
 

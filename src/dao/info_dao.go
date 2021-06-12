@@ -3,7 +3,7 @@ package dao
 import (
 	"log"
 
-	"github.com/cheolgyu/stock/backend/api/src/db"
+	"github.com/cheolgyu/stock-read-http-api/src/db"
 )
 
 var SqlInfo InfoDao

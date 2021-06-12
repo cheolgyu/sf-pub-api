@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/cheolgyu/stock/backend/api/src/dao"
-	"github.com/cheolgyu/stock/backend/api/src/model"
+	"github.com/cheolgyu/stock-read-http-api/src/dao"
+	"github.com/cheolgyu/stock-read-http-api/src/model"
 )
 
 func GetMarket(req_id string) []model.ViewMarket {

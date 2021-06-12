@@ -3,8 +3,8 @@ package dao
 import (
 	"log"
 
-	"github.com/cheolgyu/stock/backend/api/src/db"
-	"github.com/cheolgyu/stock/backend/api/src/model"
+	"github.com/cheolgyu/stock-read-http-api/src/db"
+	"github.com/cheolgyu/stock-read-http-api/src/model"
 )
 
 var SqlMarketDao MarketDao

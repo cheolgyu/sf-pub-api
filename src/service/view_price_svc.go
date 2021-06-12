@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/cheolgyu/stock/backend/api/src/dao"
-	"github.com/cheolgyu/stock/backend/api/src/model"
+	"github.com/cheolgyu/stock-read-http-api/src/dao"
+	"github.com/cheolgyu/stock-read-http-api/src/model"
 )
 
 type ViewPrice struct {

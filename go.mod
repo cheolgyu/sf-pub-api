@@ -1,4 +1,4 @@
-module github.com/cheolgyu/stock/backend/api
+module github.com/cheolgyu/stock-read-http-api
 
 go 1.16
 

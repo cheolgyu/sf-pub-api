@@ -8,8 +8,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/cheolgyu/stock/backend/api/src/model"
-	"github.com/cheolgyu/stock/backend/api/src/service"
+	"github.com/cheolgyu/stock-read-http-api/src/model"
+	"github.com/cheolgyu/stock-read-http-api/src/service"
 	"github.com/google/uuid"
 	"github.com/julienschmidt/httprouter"
 )

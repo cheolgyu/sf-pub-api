@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/cheolgyu/stock/backend/api/src/dao"
+	"github.com/cheolgyu/stock-read-http-api/src/dao"
 )
 
 func GetDetailChart(req_id string, code string, page int) string {
