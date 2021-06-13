@@ -18,7 +18,7 @@ func Exec_test(isDebug bool) {
 	mux := http.NewServeMux()
 
 	helloHandler := http.HandlerFunc(hello)
-	mux.Handle("/high_point", CORS(helloHandler))
+	mux.Handle("/bound_point", CORS(helloHandler))
 	http.ListenAndServe(":5000", mux)
 }
 
