@@ -8,18 +8,40 @@ import (
 
 const Rows = 10
 
-var AllowSort [7]string
+var AllowSort [26]string
 var AllowMarket [3]string
 
 func init() {
-	var allSort [7]string
+	var allSort [26]string
 	allSort[0] = "code"
 	allSort[1] = "name"
-	allSort[2] = "high_price"
-	allSort[3] = "last_close_price"
-	allSort[4] = "cp_y_minus"
-	allSort[5] = "cp_y_percent"
-	allSort[6] = "cp_x_tick"
+	allSort[2] = "cp_x1"
+	allSort[3] = "cp_y1"
+	allSort[4] = "cp_x2"
+	allSort[5] = "cp_y2"
+	allSort[6] = "cp_y_percent"
+	allSort[7] = "cp_x_tick"
+
+	allSort[8] = "op_x1"
+	allSort[9] = "op_y1"
+	allSort[10] = "op_x2"
+	allSort[11] = "op_y2"
+	allSort[12] = "op_y_percent"
+	allSort[13] = "op_x_tick"
+
+	allSort[14] = "lp_x1"
+	allSort[15] = "lp_y1"
+	allSort[16] = "lp_x2"
+	allSort[17] = "lp_y2"
+	allSort[18] = "lp_y_percent"
+	allSort[19] = "lp_x_tick"
+
+	allSort[20] = "hp_x1"
+	allSort[21] = "hp_y1"
+	allSort[22] = "hp_x2"
+	allSort[23] = "hp_y2"
+	allSort[24] = "hp_y_percent"
+	allSort[25] = "hp_x_tick"
 	AllowSort = allSort
 
 	var allMarket [3]string
