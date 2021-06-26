@@ -1,19 +1,13 @@
 package db
 
 import (
-	"database/sql"
-	"os"
-
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
-type DB struct {
-	Info string
-}
+func Conn() *sqlx.DB {
 
-func (db DB) Conn() *sql.DB {
-
-	conn_db, err := sql.Open("postgres", os.Getenv("DB_URL"))
+	conn_db, err := sqlx.Open("postgres", "host=localhost port=5432 user=postgres password=example dbname=dev sslmode=disable")
 	if err != nil {
 		panic(err)
 	}

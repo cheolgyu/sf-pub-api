@@ -11,7 +11,7 @@ import (
 type ViewPrice struct {
 }
 
-func GetViewPrice(req_id string, r *http.Request) []model.ViewPrice {
+func GetViewPrice(req_id string, r *http.Request) []map[string]interface{} {
 
 	q := r.URL.Query()
 	log.Printf("<%s>  params=%s \n", req_id, q)

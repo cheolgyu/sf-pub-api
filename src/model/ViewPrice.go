@@ -17,9 +17,9 @@ func init() {
 	allSort[1] = "name"
 	allSort[2] = "high_price"
 	allSort[3] = "last_close_price"
-	allSort[4] = "contrast_price"
-	allSort[5] = "fluctuation_rate"
-	allSort[6] = "day_count"
+	allSort[4] = "cp_y_minus"
+	allSort[5] = "cp_y_percent"
+	allSort[6] = "cp_x_tick"
 	AllowSort = allSort
 
 	var allMarket [3]string

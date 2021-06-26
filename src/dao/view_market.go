@@ -2,38 +2,25 @@ package dao
 
 import (
 	"log"
-
-	"github.com/cheolgyu/stock-read-pub-api/src/db"
-	"github.com/cheolgyu/stock-read-pub-api/src/model"
 )
 
 var SqlMarketDao MarketDao
 
 type MarketDao struct {
-	db.DB
 }
 
-func init() {
-	SqlMarketDao = MarketDao{
-		db.DB{},
-	}
-}
-
-func (obj MarketDao) Select(req_id string) []model.ViewMarket {
-
-	var db = obj.DB.Conn()
-	defer db.Close()
+func (obj MarketDao) Select(req_id string) []map[string]interface{} {
 
 	q := `
 
     SELECT
         *
     FROM
-        "view_market_day"
+        "daily_market"
   
 	`
 
-	rows, err := db.Query(q)
+	rows, err := DB.Queryx(q)
 
 	if err != nil {
 		log.Printf("<%s> error \n", req_id)
@@ -42,21 +29,17 @@ func (obj MarketDao) Select(req_id string) []model.ViewMarket {
 
 	defer rows.Close()
 
-	var list []model.ViewMarket
+	var list []map[string]interface{}
 
 	for rows.Next() {
-		var item model.ViewMarket
+		item := make(map[string]interface{})
 
-		err = rows.Scan(
-			&item.ShortCode, &item.High_date, &item.High_price, &item.Last_date, &item.Last_close_price,
-			&item.Contrast_price, &item.Fluctuation_rate, &item.Day_count, &item.High_point_updated_date, &item.Naver_link,
-		)
-
+		err = rows.MapScan(item)
 		if err != nil {
 			log.Printf("<%s> error \n", req_id)
 			panic(err)
 		}
-		list = append(list, item)
+		list = append(list, Decode(item))
 
 	}
 	return list

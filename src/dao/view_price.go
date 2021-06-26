@@ -1,33 +1,22 @@
 package dao
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"strconv"
 
-	"github.com/cheolgyu/stock-read-pub-api/src/db"
 	"github.com/cheolgyu/stock-read-pub-api/src/model"
+	"github.com/jmoiron/sqlx"
 )
 
 var SqlViewPrice ViewPrice
 
 type ViewPrice struct {
-	db.DB
 }
 
-func init() {
-	SqlViewPrice = ViewPrice{
-		db.DB{},
-	}
-}
+func (obj ViewPrice) Select(req_id string, parms model.ViewPriceParms) []map[string]interface{} {
 
-func (obj ViewPrice) Select(req_id string, parms model.ViewPriceParms) []model.ViewPrice {
-
-	var db = obj.DB.Conn()
-	defer db.Close()
-
-	q := `SELECT count(*) OVER() AS full_count,* FROM  view_price_day `
+	q := `SELECT count(*) OVER() AS full_count,* FROM  daily_stock `
 
 	q += ` where  1=1 `
 
@@ -60,13 +49,15 @@ func (obj ViewPrice) Select(req_id string, parms model.ViewPriceParms) []model.V
 
 	log.Printf("<%s> query=%s \n", req_id, q)
 
-	var rows *sql.Rows
+	var rows *sqlx.Rows
 	var err error
 	if parms.Search != "" {
 
-		rows, err = db.Query(q, "%"+parms.Search+"%")
+		//rows, err = DB.Queryx(q, "%"+parms.Search+"%")
+		q += "%" + parms.Search + "%"
+		rows, err = DB.Queryx(q)
 	} else {
-		rows, err = db.Query(q)
+		rows, err = DB.Queryx(q)
 	}
 
 	if err != nil {
@@ -76,26 +67,18 @@ func (obj ViewPrice) Select(req_id string, parms model.ViewPriceParms) []model.V
 
 	defer rows.Close()
 
-	var list []model.ViewPrice
+	var list []map[string]interface{}
 
 	for rows.Next() {
-		var item model.ViewPrice
+		item := make(map[string]interface{})
 
-		err = rows.Scan(
-			&item.Full_count,
-			&item.Code, &item.Name, &item.Market, &item.High_date, &item.High_price,
-			&item.Last_close_price, &item.Contrast_price, &item.Fmt_high_date, &item.Fmt_high_price, &item.Fmt_last_date,
-			&item.Fmt_last_close_price, &item.Fmt_contrast_price, &item.Fluctuation_rate, &item.Day_count, &item.Updated_date_high_point,
-			&item.Naver_link, &item.Stop, &item.Clear, &item.Managed, &item.Ventilation,
-			&item.Unfaithful, &item.Low_liquidity, &item.Lack_listed, &item.Overheated, &item.Caution,
-			&item.Warning, &item.Risk, &item.Updated_date_company_state,
-		)
+		err = rows.MapScan(item)
 
 		if err != nil {
 			log.Printf("<%s> error \n", req_id)
 			panic(err)
 		}
-		list = append(list, item)
+		list = append(list, Decode(item))
 
 	}
 	return list

@@ -2,42 +2,29 @@ package dao
 
 import (
 	"log"
-
-	"github.com/cheolgyu/stock-read-pub-api/src/db"
 )
 
 var SqlInfo InfoDao
 
 type InfoDao struct {
-	db.DB
 }
 
 func init() {
-	SqlInfo = InfoDao{
-		db.DB{},
-	}
+	SqlInfo = InfoDao{}
 }
 
-func (obj InfoDao) Select(req_id string) map[string]string {
-
-	var db = obj.DB.Conn()
-	defer db.Close()
+func (obj InfoDao) Select(req_id string) []map[string]interface{} {
 
 	q := `
 
     SELECT
         NAME,
-        fmt_timestamp(updated_date) :: text AS updated_date
+        updated
     FROM
         "info"
-    WHERE
-        NAME LIKE 'daily_company%'
-        OR NAME LIKE 'daily_price_day%'
-        OR NAME LIKE 'daily_high%'
-        OR NAME LIKE 'daily_market%'
 	`
 
-	rows, err := db.Query(q)
+	rows, err := DB.Queryx(q)
 
 	if err != nil {
 		log.Printf("<%s> error \n", req_id)
@@ -46,15 +33,13 @@ func (obj InfoDao) Select(req_id string) map[string]string {
 
 	defer rows.Close()
 
-	//var list []interface{}
-	item := make(map[string]string)
+	var list []map[string]interface{}
 
 	for rows.Next() {
 
-		var nm string
-		var val string
-		err = rows.Scan(&nm, &val)
-		item[nm] = val
+		item := make(map[string]interface{})
+		err = rows.MapScan(item)
+		list = append(list, Decode(item))
 		if err != nil {
 			log.Printf("<%s> error \n", req_id)
 			panic(err)
@@ -62,5 +47,5 @@ func (obj InfoDao) Select(req_id string) map[string]string {
 
 	}
 
-	return item
+	return list
 }

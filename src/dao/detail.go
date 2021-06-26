@@ -3,26 +3,14 @@ package dao
 import (
 	"fmt"
 	"log"
-
-	"github.com/cheolgyu/stock-read-pub-api/src/db"
 )
 
 var SqlDetail DetailDao
 
 type DetailDao struct {
-	db.DB
-}
-
-func init() {
-	SqlDetail = DetailDao{
-		db.DB{},
-	}
 }
 
 func (obj DetailDao) SelectChart(req_id string, code string, page int) string {
-
-	var db = obj.DB.Conn()
-	defer db.Close()
 
 	q := `
 SELECT
@@ -70,7 +58,7 @@ FROM
 	pq := fmt.Sprintf(q, code, page)
 	log.Println(pq)
 	var item string
-	err := db.QueryRow(pq).Scan(&item)
+	err := DB.QueryRow(pq).Scan(&item)
 
 	if err != nil {
 		log.Printf("<%s> error \n", req_id)
@@ -81,9 +69,6 @@ FROM
 }
 
 func (obj DetailDao) SelectCompany(req_id string, code string) string {
-
-	var db = obj.DB.Conn()
-	defer db.Close()
 
 	q := `
 	select
@@ -100,7 +85,7 @@ func (obj DetailDao) SelectCompany(req_id string, code string) string {
 	pq := fmt.Sprintf(q, code)
 	log.Println(pq)
 	var item string
-	err := db.QueryRow(pq).Scan(&item)
+	err := DB.QueryRow(pq).Scan(&item)
 
 	if err != nil {
 		log.Printf("<%s> error \n", req_id)

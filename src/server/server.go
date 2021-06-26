@@ -8,7 +8,6 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/cheolgyu/stock-read-pub-api/src/model"
 	"github.com/cheolgyu/stock-read-pub-api/src/service"
 	"github.com/google/uuid"
 	"github.com/julienschmidt/httprouter"
@@ -51,9 +50,9 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 type ViewPriceResult struct {
-	Info   map[string]string  `json:"info"`
-	Price  []model.ViewPrice  `json:"price"`
-	Market []model.ViewMarket `json:"market"`
+	Info   []map[string]interface{} `json:"info"`
+	Price  []map[string]interface{} `json:"price"`
+	Market []map[string]interface{} `json:"market"`
 }
 
 func HandlerViewPrice(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -63,7 +62,7 @@ func HandlerViewPrice(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 	list := service.GetViewPrice(req_id, r)
 	info := service.GetInfo(req_id)
 	market_list := service.GetMarket(req_id)
-
+	//log.Println(market_list)
 	res := ViewPriceResult{}
 	res.Info = info
 	res.Price = list
