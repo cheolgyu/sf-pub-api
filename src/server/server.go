@@ -61,11 +61,21 @@ func HandlerViewPrice(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 
 	list := service.GetViewPrice(req_id, r)
 	info := service.GetInfo(req_id)
-	market_list := service.GetMarket(req_id)
-	//log.Println(market_list)
 	res := ViewPriceResult{}
 	res.Info = info
 	res.Price = list
+	json.NewEncoder(w).Encode(res)
+
+}
+func HandlerViewMarket(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	req_id := r.Header.Get("req_id")
+	setCors(&w)
+
+	info := service.GetInfo(req_id)
+	market_list := service.GetMarket(req_id, r)
+	//log.Println(market_list)
+	res := ViewPriceResult{}
+	res.Info = info
 	res.Market = market_list
 	json.NewEncoder(w).Encode(res)
 
@@ -126,6 +136,7 @@ func server() {
 	})
 	router.GET("/", Index)
 	router.GET("/price", HandlerViewPrice)
+	router.GET("/market", HandlerViewMarket)
 	router.GET("/detail/chart/:code", HandlerDetailChart)
 	router.GET("/detail/company/:code", HandlerDetailCompany)
 	m := NewMiddleware(router, "I'm a middleware")

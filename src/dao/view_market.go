@@ -2,6 +2,8 @@ package dao
 
 import (
 	"log"
+
+	"github.com/cheolgyu/stock-read-pub-api/src/model"
 )
 
 var SqlMarketDao MarketDao
@@ -9,7 +11,7 @@ var SqlMarketDao MarketDao
 type MarketDao struct {
 }
 
-func (obj MarketDao) Select(req_id string) []map[string]interface{} {
+func (obj MarketDao) Select(req_id string, parms model.ViewPriceParms) []map[string]interface{} {
 
 	q := `
 
@@ -17,8 +19,11 @@ func (obj MarketDao) Select(req_id string) []map[string]interface{} {
         *
     FROM
         "daily_market"
-  
+	
 	`
+	if parms.Sort != "" {
+		q += ` order by  ` + parms.Sort + `  ` + parms.GetDesc() + ` `
+	}
 
 	rows, err := DB.Queryx(q)
 
