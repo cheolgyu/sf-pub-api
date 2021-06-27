@@ -23,11 +23,17 @@ func (obj ViewPrice) Select(req_id string, parms model.ViewPriceParms) []map[str
 	if parms.Search != "" {
 		q += ` and  name like $1 `
 	}
-
-	if parms.State != "" {
-		_q := ` and %s is true `
-
-		q += fmt.Sprintf(_q, parms.State)
+	if len(parms.State) > 0 {
+		q += ` and (  `
+		i := 0
+		for k, v := range parms.State {
+			if i > 0 {
+				q += ` and `
+			}
+			q += fmt.Sprintf(" %s is  %t ", k, v)
+			i++
+		}
+		q += ` ) `
 	}
 
 	if len(parms.Market) > 0 {
@@ -62,6 +68,7 @@ func (obj ViewPrice) Select(req_id string, parms model.ViewPriceParms) []map[str
 
 	if err != nil {
 		log.Printf("<%s> error \n", req_id)
+		log.Printf("<%s> error:q= \n", q)
 		panic(err)
 	}
 

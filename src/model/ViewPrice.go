@@ -10,6 +10,7 @@ const Rows = 10
 
 var AllowSort [26]string
 var AllowMarket [3]string
+var AllowState [11]string
 
 func init() {
 	var allSort [26]string
@@ -50,6 +51,20 @@ func init() {
 	allMarket[2] = "KONEX"
 
 	AllowMarket = allMarket
+
+	var allowState [11]string
+	allowState[0] = "stop"
+	allowState[1] = "clear"
+	allowState[2] = "managed"
+	allowState[3] = "ventilation"
+	allowState[4] = "unfaithful"
+	allowState[5] = "low_liquidity"
+	allowState[6] = "lack_listed"
+	allowState[7] = "overheated"
+	allowState[8] = "caution"
+	allowState[9] = "warning"
+	allowState[10] = "risk"
+	AllowState = allowState
 }
 
 type ViewPriceParms struct {
@@ -58,7 +73,7 @@ type ViewPriceParms struct {
 	Sort   string
 	Desc   bool
 	Market []string
-	State  string
+	State  map[string]bool
 	Search string
 }
 
@@ -105,16 +120,11 @@ func (obj *ViewPriceParms) SetSortDesc(sort string, in_desc string) {
 
 }
 
-func (obj *ViewPriceParms) SetEtc(market string, state string, search string) {
-
-	obj.State = state
-
-	//var m_arr []string
+func (obj *ViewPriceParms) SetEtc(market string, search string) {
 
 	m_arr := make(map[string]bool)
 	market_str := strings.TrimSpace(market)
 	str := strings.Split(market_str, ",")
-
 	for _, i := range AllowMarket {
 		is := false
 		for _, j := range str {
@@ -133,6 +143,29 @@ func (obj *ViewPriceParms) SetEtc(market string, state string, search string) {
 
 	obj.Market = keys
 	obj.Search = search
+}
+
+func (obj *ViewPriceParms) SetState(state string) {
+
+	m_arr := make(map[string]bool)
+	state_str := strings.TrimSpace(state)
+	str := strings.Split(state_str, ",")
+
+	for _, i := range AllowState {
+		for _, j := range str {
+			str_arr := strings.Split(j, "::")
+			if len(str_arr) == 2 {
+				if i == str_arr[0] {
+					v, err := strconv.ParseBool(str_arr[1])
+					if err == nil {
+						m_arr[str_arr[0]] = v
+					}
+				}
+			}
+
+		}
+	}
+	obj.State = m_arr
 }
 
 type ViewPrice struct {
