@@ -21,7 +21,7 @@ func (obj ViewPrice) Select(req_id string, parms model.ViewPriceParms) []map[str
 	q += ` where  1=1 `
 
 	if parms.Search != "" {
-		q += ` and  name like $1 `
+		q += ` and  name like '%` + parms.Search + `%' `
 	}
 	if len(parms.State) > 0 {
 		q += ` and (  `
@@ -57,14 +57,7 @@ func (obj ViewPrice) Select(req_id string, parms model.ViewPriceParms) []map[str
 
 	var rows *sqlx.Rows
 	var err error
-	if parms.Search != "" {
-
-		//rows, err = DB.Queryx(q, "%"+parms.Search+"%")
-		q += "%" + parms.Search + "%"
-		rows, err = DB.Queryx(q)
-	} else {
-		rows, err = DB.Queryx(q)
-	}
+	rows, err = DB.Queryx(q)
 
 	if err != nil {
 		log.Printf("<%s> error \n", req_id)

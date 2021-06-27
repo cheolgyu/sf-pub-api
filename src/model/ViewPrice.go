@@ -142,6 +142,9 @@ func (obj *ViewPriceParms) SetEtc(market string, search string) {
 	}
 
 	obj.Market = keys
+	search = strings.ReplaceAll(search, "-", "")
+	search = strings.ReplaceAll(search, "'", "")
+	search = strings.ReplaceAll(search, ";", "")
 	obj.Search = search
 }
 
