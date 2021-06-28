@@ -16,7 +16,7 @@ func (obj DetailDao) SelectChart(req_id string, code string, page int) string {
 SELECT
 	json_build_object(
 		'date',
-		array_agg(tb.d),
+		array_agg(tb.lb),
 		'op',
 		array_agg(tb.op),
 		'hp',
@@ -35,22 +35,23 @@ FROM
 		SELECT
 			t. *
 		FROM
-(
-				SELECT
-					"Date" AS d,
-					"OpenPrice" op,
-					"HighPrice" hp,
-					"LowPrice" lp,
-					"ClosePrice" cp,
-					"Volume" v,
-					"ForeignerBurnoutRate" fr
-				FROM
-					"price_day"."tb_%s"
-				ORDER BY
-					"Date" DESC
-				LIMIT
-					30 offset (% v -1) * 30
-			) t
+		(
+			SELECT P_DATE D,
+				concat(SUBSTRING (P_DATE::text,0,5),'-',SUBSTRING (P_DATE::text,5,2),'-',SUBSTRING (P_DATE::text,7,2)) lb,
+				CP,
+				OP,
+				LP,
+				HP,
+				VOL V,
+				FB_RATE FR
+			FROM
+				hist.price_stock
+			WHERE CODE = '%s'
+			ORDER BY
+				p_date DESC
+			LIMIT
+				30 offset (%v -1) * 30
+		) t
 		ORDER BY
 			t.d ASC
 	) tb
@@ -71,16 +72,16 @@ FROM
 func (obj DetailDao) SelectCompany(req_id string, code string) string {
 
 	q := `
-	select
-	json_build_object(
-		'c',
-		row_to_json(c.*),
-		'cs',
-		row_to_json(cs.*)
-		) 
-	from listed_company c left join listed_company_state cs on c.short_code = cs.code 
-	where c.short_code = '%s'
-	limit 1
+	SELECT JSON_BUILD_OBJECT('c',
+		ROW_TO_JSON(C.*),
+		'd',
+		ROW_TO_JSON(D.*),
+		's',
+		ROW_TO_JSON(S.*))
+	FROM COMPANY.CODE C
+	LEFT JOIN COMPANY.DETAIL D ON C.CODE = D.CODE
+	LEFT JOIN COMPANY.STATE S ON C.CODE = S.CODE
+	WHERE C.CODE = '%s'
 	`
 	pq := fmt.Sprintf(q, code)
 	log.Println(pq)
