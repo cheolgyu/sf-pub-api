@@ -27,7 +27,7 @@ func (obj InfoDao) Select(req_id string) []map[string]interface{} {
 	rows, err := DB.Queryx(q)
 
 	if err != nil {
-		log.Printf("<%s> error \n", req_id)
+		log.Printf("info  Queryx error: <%s>  \n", req_id)
 		panic(err)
 	}
 
@@ -41,7 +41,7 @@ func (obj InfoDao) Select(req_id string) []map[string]interface{} {
 		err = rows.MapScan(item)
 		list = append(list, Decode(item))
 		if err != nil {
-			log.Printf("<%s> error \n", req_id)
+			log.Printf("info  MapScan error: <%s>  \n", req_id)
 			panic(err)
 		}
 

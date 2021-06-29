@@ -28,7 +28,8 @@ func (obj MarketDao) Select(req_id string, parms model.ViewPriceParms) []map[str
 	rows, err := DB.Queryx(q)
 
 	if err != nil {
-		log.Printf("<%s> error \n", req_id)
+		log.Printf("view_market:Queryx::error::::<%s>  \n", req_id)
+		log.Printf("view_market:Queryx::error::::<%s> query= \n", q)
 		panic(err)
 	}
 
@@ -41,7 +42,7 @@ func (obj MarketDao) Select(req_id string, parms model.ViewPriceParms) []map[str
 
 		err = rows.MapScan(item)
 		if err != nil {
-			log.Printf("<%s> error \n", req_id)
+			log.Printf("view_market:MapScan::error::::<%s>  \n", req_id)
 			panic(err)
 		}
 		list = append(list, Decode(item))

@@ -60,8 +60,8 @@ func (obj ViewPrice) Select(req_id string, parms model.ViewPriceParms) []map[str
 	rows, err = DB.Queryx(q)
 
 	if err != nil {
-		log.Printf("<%s> error \n", req_id)
-		log.Printf("<%s> error:q= \n", q)
+		log.Printf("view_price:Queryx::error::::<%s>  \n", req_id)
+		log.Printf("view_price:Queryx::error::::<%s> query= \n", q)
 		panic(err)
 	}
 
@@ -75,7 +75,7 @@ func (obj ViewPrice) Select(req_id string, parms model.ViewPriceParms) []map[str
 		err = rows.MapScan(item)
 
 		if err != nil {
-			log.Printf("<%s> error \n", req_id)
+			log.Printf("view_price:MapScan::error::::<%s>  \n", req_id)
 			panic(err)
 		}
 		list = append(list, Decode(item))

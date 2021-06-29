@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"io"
 	"log"
 	"os"
@@ -20,25 +19,10 @@ gin -i --appPort 5001  --port 5000  run  main.go
 var isDebug bool = true
 
 func init() {
-	flag_prod := flag.Bool("prod", false, "a bool")
-
-	flag.Parse()
-
-	if *flag_prod {
-		err := godotenv.Load(".env.prod")
-		if err != nil {
-			log.Panic("Error loading .env file")
-		}
-	} else {
-		err := godotenv.Load(".env.local")
-		if err != nil {
-			log.Panic("Error loading .env file")
-		}
+	err := godotenv.Load(".env.local")
+	if err != nil {
+		log.Panic("Error loading .env file")
 	}
-
-	log.Println("prod", *flag_prod)
-
-	isDebug = !*flag_prod
 }
 
 // go run data-server/main.go
