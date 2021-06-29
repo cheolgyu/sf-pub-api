@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/cheolgyu/stock-read-pub-api/src/service"
 	"github.com/google/uuid"
@@ -46,7 +47,8 @@ func (m *Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	req_id := r.Header.Get("req_id")
 	log.Printf("<%s> \n ", req_id)
-	fmt.Fprint(w, "Welcome!\n")
+	msg := fmt.Sprintf("Welcome! %s\n", time.Now().String())
+	fmt.Fprint(w, msg)
 }
 
 type ViewPriceResult struct {
