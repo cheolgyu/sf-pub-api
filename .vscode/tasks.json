@@ -21,6 +21,7 @@
             },
             "group": "none"
         },
+        
         {
             "label": "build for linux",
             "type": "shell",
@@ -35,6 +36,32 @@
                 }
             },
             "command": "go build -o ./bin/stock-api main.go ",
+        },
+        ////////////////////////////////////
+        {
+            "label": "deploy",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "build docker",
+                "tar",
+                "upload"
+            ]
+        },
+        {
+            "label": "build docker",
+            "type": "shell",
+            "command": "docker build --pull --rm -f Dockerfile -t stock-read-pub-api:latest . ",
+        },
+        {
+            "label": "tar",
+            "type": "shell",
+            "command": "Docker save -o ./bin/stock-read-pub-api.tar stock-read-pub-api:latest",
+        },
+        {
+            "label": "upload",
+            "type": "shell",
+            "command": "scp -i ../stock/highserpot_stock.pem  ./bin/stock-read-pub-api.tar ec2-user@3.37.161.89:~/stock/img",
         },
     ]
 }
