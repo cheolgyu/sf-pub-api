@@ -4,9 +4,9 @@ import (
 	"github.com/cheolgyu/stock-read-pub-api/src/dao"
 )
 
-func GetDetailChart(req_id string, code string, page int) string {
+func GetDetailChart(req_id string, table_nm string, code string, page int) string {
 
-	return dao.SqlDetail.SelectChart(req_id, code, page)
+	return dao.SqlDetail.SelectChart(req_id, table_nm, code, page)
 
 }
 

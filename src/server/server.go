@@ -19,6 +19,9 @@ var DATA []byte
 var frontend_url string
 var port string
 
+var MarketList = []string{"KOSPI", "KOSDAQ", "FUT", "KPI200"}
+var MarketListName = []string{"코스피", "코스닥", "선물", "코스피200"}
+
 func Exec(isDebug bool) {
 	frontend_url = os.Getenv("FRONTEND_URL")
 	port = ":" + os.Getenv("PORT")
@@ -83,6 +86,19 @@ func HandlerViewMarket(w http.ResponseWriter, r *http.Request, _ httprouter.Para
 
 }
 
+func ChkMarketCode(code string) (bool, int) {
+	is_market := false
+	idx := -1
+	for i := range MarketList {
+		if MarketList[i] == code {
+			idx = i
+			is_market = true
+			break
+		}
+	}
+	return is_market, idx
+}
+
 func HandlerDetailChart(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	req_id := r.Header.Get("req_id")
 	setCors(&w)
@@ -91,12 +107,18 @@ func HandlerDetailChart(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	q := r.URL.Query()
 	page := q.Get("page")
 
-	p, err := strconv.Atoi(page)
-	if err != nil {
-		p = 1
+	tbnm := "hist.price_stock"
+	market, _ := ChkMarketCode(req_code)
+	if market {
+		tbnm = "hist.price_market"
 	}
 
-	list := service.GetDetailChart(req_id, req_code, p)
+	pnum, err := strconv.Atoi(page)
+	if err != nil {
+		pnum = 1
+	}
+
+	list := service.GetDetailChart(req_id, tbnm, req_code, pnum)
 
 	json.NewEncoder(w).Encode(list)
 
@@ -107,8 +129,14 @@ func HandlerDetailCompany(w http.ResponseWriter, r *http.Request, ps httprouter.
 	setCors(&w)
 
 	req_code := ps.ByName("code")
+	var list string
+	market, i := ChkMarketCode(req_code)
 
-	list := service.GetDetailCompany(req_id, req_code)
+	if market {
+		list = `{"code": "` + MarketList[i] + `","name":"` + MarketListName[i] + `"}`
+	} else {
+		list = service.GetDetailCompany(req_id, req_code)
+	}
 
 	json.NewEncoder(w).Encode(list)
 

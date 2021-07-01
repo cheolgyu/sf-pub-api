@@ -10,7 +10,7 @@ var SqlDetail DetailDao
 type DetailDao struct {
 }
 
-func (obj DetailDao) SelectChart(req_id string, code string, page int) string {
+func (obj DetailDao) SelectChart(req_id string, table_nm string, code string, page int) string {
 
 	q := `
 SELECT
@@ -45,7 +45,7 @@ FROM
 				VOL V,
 				FB_RATE FR
 			FROM
-				hist.price_stock
+				` + table_nm + `
 			WHERE CODE = '%s'
 			ORDER BY
 				p_date DESC
