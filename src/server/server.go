@@ -133,7 +133,7 @@ func HandlerDetailCompany(w http.ResponseWriter, r *http.Request, ps httprouter.
 	market, i := ChkMarketCode(req_code)
 
 	if market {
-		list = `{"code": "` + MarketList[i] + `","name":"` + MarketListName[i] + `"}`
+		list = `{ "c": { "code": "` + MarketList[i] + `","name":"` + MarketListName[i] + `"}}`
 	} else {
 		list = service.GetDetailCompany(req_id, req_code)
 	}
