@@ -60,6 +60,13 @@ type ViewPriceResult struct {
 	Market []map[string]interface{} `json:"market"`
 }
 
+func HandlerDayTrading(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	req_id := r.Header.Get("req_id")
+	setCors(&w)
+	list := service.GetDayTrading(req_id, r)
+	json.NewEncoder(w).Encode(list)
+}
+
 func HandlerViewPrice(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	req_id := r.Header.Get("req_id")
 	setCors(&w)
@@ -169,6 +176,7 @@ func server() {
 	router.GET("/market", HandlerViewMarket)
 	router.GET("/detail/chart/:code", HandlerDetailChart)
 	router.GET("/detail/company/:code", HandlerDetailCompany)
+	router.GET("/day_trading", HandlerDayTrading)
 	m := NewMiddleware(router, "I'm a middleware")
 	log.Fatal(http.ListenAndServe(port, m))
 }

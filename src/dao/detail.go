@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 )
@@ -58,15 +59,23 @@ FROM
 	`
 	pq := fmt.Sprintf(q, code, page)
 	log.Println(pq)
-	var item string
+	var item sql.NullString
 	err := DB.QueryRow(pq).Scan(&item)
 
 	if err != nil {
 		log.Printf("<%s> error \n", req_id)
-		panic(err)
+		if err == sql.ErrNoRows {
+			// there were no rows, but otherwise no error occurred
+		} else {
+			log.Fatal(err)
+		}
 	}
 
-	return item
+	if item.Valid {
+		return item.String
+	} else {
+		return ""
+	}
 }
 
 func (obj DetailDao) SelectCompany(req_id string, code string) string {
@@ -85,13 +94,21 @@ func (obj DetailDao) SelectCompany(req_id string, code string) string {
 	`
 	pq := fmt.Sprintf(q, code)
 	log.Println(pq)
-	var item string
+	var item sql.NullString
 	err := DB.QueryRow(pq).Scan(&item)
 
 	if err != nil {
 		log.Printf("<%s> error \n", req_id)
-		panic(err)
+		if err == sql.ErrNoRows {
+			// there were no rows, but otherwise no error occurred
+		} else {
+			log.Fatal(err)
+		}
+	}
+	if item.Valid {
+		return item.String
+	} else {
+		return ""
 	}
 
-	return item
 }
