@@ -61,26 +61,7 @@ func (obj *ViewPriceParms) SetSortDesc(sort string, in_desc string) {
 
 func (obj *ViewPriceParms) SetEtc(market string, search string) {
 
-	m_arr := make(map[string]bool)
-	market_str := strings.TrimSpace(market)
-	str := strings.Split(market_str, ",")
-	for _, i := range AllowMarket {
-		is := false
-		for _, j := range str {
-			if i == j {
-				is = true
-			}
-		}
-		m_arr[i] = is
-	}
-	keys := []string{}
-	for key, value := range m_arr {
-		if value {
-			keys = append(keys, key)
-		}
-	}
-
-	obj.Market = keys
+	obj.Market = ParseMarketIn(market)
 	search = strings.ReplaceAll(search, "-", "")
 	search = strings.ReplaceAll(search, "'", "")
 	search = strings.ReplaceAll(search, ";", "")

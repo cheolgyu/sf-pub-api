@@ -80,6 +80,30 @@ func ChkMarket(market string) bool {
 	return chk
 }
 
+func ParseMarketIn(market string) []string {
+	keys := []string{}
+	m_arr := make(map[string]bool)
+	market_str := strings.TrimSpace(market)
+	str := strings.Split(market_str, ",")
+	for _, i := range AllowMarket {
+		is := false
+		for _, j := range str {
+			if i == j {
+				is = true
+			}
+		}
+		m_arr[i] = is
+	}
+
+	for key, value := range m_arr {
+		if value {
+			keys = append(keys, key)
+		}
+	}
+
+	return keys
+}
+
 func ChkDate(str string) bool {
 	chk := false
 	res, err := strconv.ParseInt(str, 0, 32)

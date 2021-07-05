@@ -1,9 +1,10 @@
 package dao
 
 import (
-	"fmt"
 	"log"
+	"strconv"
 
+	"github.com/cheolgyu/stock-read-pub-api/src/model"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -12,33 +13,31 @@ var SqlDayTrading DayTradingDao
 type DayTradingDao struct {
 }
 
-func (obj DayTradingDao) Get(req_id string, market string, start string, end string) []map[string]interface{} {
+func (obj DayTradingDao) Get(req_id string, parms model.DatTradingParms) []map[string]interface{} {
 
 	q := `
-SELECT C.CODE,
-	C.NAME,
-	ROUND(AVG(PS.L2H),
-		2) AS AVG_L2H,
-	ROUND(AVG(PS.O2C),
-		2) AS AVG_O2C
-FROM COMPANY.STATE S
-LEFT JOIN COMPANY.CODE C ON S.CODE = C.CODE
-LEFT JOIN COMPANY.DETAIL D ON C.CODE = D.CODE
-LEFT JOIN
-	(SELECT *
-		FROM HIST.PRICE_STOCK
-		WHERE 1 = 1
-			AND P_DATE BETWEEN %v AND %v
-		GROUP BY CODE,
-			P_DATE) PS ON C.CODE = PS.CODE
+SELECT *
+from public.tb_daily_day_trading
 WHERE 1 = 1
-	AND S.STOP IS FALSE
-	AND D.MARKET = '%v'
-GROUP BY C.CODE
-ORDER BY AVG_L2H DESC
-LIMIT 10
-`
-	q = fmt.Sprintf(q, start, end, market)
+	`
+	if len(parms.Market) > 0 {
+		q += `and market in ( `
+		for i, v := range parms.Market {
+			if i > 0 {
+				q += ` ,`
+			}
+			q += ` '` + v + `' `
+		}
+
+		q += ` ) `
+	}
+	if parms.Sort != "" {
+		q += ` order by  ` + parms.Sort + `  ` + parms.GetDesc() + ` `
+	}
+	q += `limit ` + strconv.Itoa(parms.Limit) + ` OFFSET ` + strconv.Itoa(parms.Offset)
+
+	log.Printf("<%s> query=%s \n", req_id, q)
+
 	var rows *sqlx.Rows
 	var err error
 	rows, err = DB.Queryx(q)
