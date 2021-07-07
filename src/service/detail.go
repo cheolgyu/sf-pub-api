@@ -15,3 +15,8 @@ func GetDetailCompany(req_id string, code string) string {
 	return dao.SqlDetail.SelectCompany(req_id, code)
 
 }
+
+func GetDetailChartLine(req_id string, code string) string {
+
+	return dao.SqlDetail.SelectChartLine(req_id, code)
+}

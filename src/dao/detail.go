@@ -78,6 +78,46 @@ FROM
 	}
 }
 
+func (obj DetailDao) SelectChartLine(req_id string, code string) string {
+
+	q := `
+	select JSON_AGG(json_build_object(g_type ,
+		json_build_array(
+			json_build_object('x',
+			concat(SUBSTRING (x1::text,0,5),'-',SUBSTRING (x1::text,5,2),'-',SUBSTRING (x1::text,7,2)) 
+			,'y',y1)
+			,json_build_object('x',
+			concat(SUBSTRING (x2::text,0,5),'-',SUBSTRING (x2::text,5,2),'-',SUBSTRING (x2::text,7,2))
+			,'y',y2)
+			,json_build_object('x',
+			concat(SUBSTRING (x3::text,0,5),'-',SUBSTRING (x3::text,5,2),'-',SUBSTRING (x3::text,7,2))
+			,'y',y3)
+		)
+	 ))
+	from public.tb_daily_line dl  
+	where dl.code =  '%s'
+	`
+	pq := fmt.Sprintf(q, code)
+	log.Println(pq)
+	var item sql.NullString
+	err := DB.QueryRow(pq).Scan(&item)
+
+	if err != nil {
+		log.Printf("<%s> error \n", req_id)
+		if err == sql.ErrNoRows {
+			// there were no rows, but otherwise no error occurred
+		} else {
+			log.Fatal(err)
+		}
+	}
+
+	if item.Valid {
+		return item.String
+	} else {
+		return ""
+	}
+}
+
 func (obj DetailDao) SelectCompany(req_id string, code string) string {
 
 	q := `

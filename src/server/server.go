@@ -131,6 +131,18 @@ func HandlerDetailChart(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 
 }
 
+func HandlerDetailChartLine(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	req_id := r.Header.Get("req_id")
+	setCors(&w)
+
+	req_code := ps.ByName("code")
+
+	list := service.GetDetailChartLine(req_id, req_code)
+
+	json.NewEncoder(w).Encode(list)
+
+}
+
 func HandlerDetailCompany(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	req_id := r.Header.Get("req_id")
 	setCors(&w)
@@ -174,6 +186,7 @@ func server() {
 	router.GET("/", Index)
 	router.GET("/price", HandlerViewPrice)
 	router.GET("/market", HandlerViewMarket)
+	router.GET("/detail/chartline/:code", HandlerDetailChartLine)
 	router.GET("/detail/chart/:code", HandlerDetailChart)
 	router.GET("/detail/company/:code", HandlerDetailCompany)
 	router.GET("/day_trading", HandlerDayTrading)
