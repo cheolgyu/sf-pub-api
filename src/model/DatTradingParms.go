@@ -9,6 +9,7 @@ var DTP_AllowSort []string
 func init() {
 	DTP_AllowSort = append(DTP_AllowSort, "code")
 	DTP_AllowSort = append(DTP_AllowSort, "name")
+	DTP_AllowSort = append(DTP_AllowSort, "avg")
 	DTP_AllowSort = append(DTP_AllowSort, "std")
 }
 

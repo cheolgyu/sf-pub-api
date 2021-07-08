@@ -67,6 +67,15 @@ func HandlerDayTrading(w http.ResponseWriter, r *http.Request, _ httprouter.Para
 	json.NewEncoder(w).Encode(list)
 }
 
+func HandlerInfo(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	req_id := r.Header.Get("req_id")
+	setCors(&w)
+	res := ViewPriceResult{}
+	info := service.GetInfo(req_id)
+	res.Info = info
+	json.NewEncoder(w).Encode(res)
+}
+
 func HandlerViewPrice(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	req_id := r.Header.Get("req_id")
 	setCors(&w)
@@ -184,6 +193,7 @@ func server() {
 		w.WriteHeader(http.StatusNoContent)
 	})
 	router.GET("/", Index)
+	router.GET("/info", HandlerInfo)
 	router.GET("/price", HandlerViewPrice)
 	router.GET("/market", HandlerViewMarket)
 	router.GET("/detail/chartline/:code", HandlerDetailChartLine)
