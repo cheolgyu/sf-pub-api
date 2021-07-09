@@ -126,10 +126,14 @@ func (obj DetailDao) SelectCompany(req_id string, code string) string {
 		'd',
 		ROW_TO_JSON(D.*),
 		's',
-		ROW_TO_JSON(S.*))
+		ROW_TO_JSON(S.*),
+	 	'peek',
+		ROW_TO_JSON(mp.*)
+						)
 	FROM COMPANY.CODE C
 	LEFT JOIN COMPANY.DETAIL D ON C.CODE = D.CODE
 	LEFT JOIN COMPANY.STATE S ON C.CODE = S.CODE
+	LEFT JOIN public.daily_monthly_peek mp ON C.CODE = mp.CODE
 	WHERE C.CODE = '%s'
 	`
 	pq := fmt.Sprintf(q, code)
