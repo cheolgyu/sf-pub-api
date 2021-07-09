@@ -44,7 +44,7 @@
             "dependsOn": [
                 "1-1. build docker",
                 "1-2. tar",
-                "1-3. vupload"
+                "1-3. upload"
             ]
         },
         {
