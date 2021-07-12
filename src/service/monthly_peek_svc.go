@@ -14,12 +14,12 @@ func GetMonthlyPeek(req_id string, r *http.Request) []map[string]interface{} {
 	log.Printf("<%s> DayTradingSvc  params=%s \n", req_id, q)
 
 	var list []map[string]interface{}
-	parms := model.MonthlyPeekParams{}
-	parms.SetMarket(q.Get("market"))
-	parms.SetSortDesc(q.Get("sort"), q.Get("desc"))
-	parms.SetPageRows(q.Get("page"), q.Get("rows"))
+	params := model.MonthlyPeekParams{}
+	params.SetMarket(q.Get("market"))
+	params.SetSortDesc(q.Get("sort"), q.Get("desc"))
+	params.SetPageRows(q.Get("page"), q.Get("rows"))
 
-	list = dao.SqlMonthlyPeek.Get(req_id, parms)
+	list = dao.SqlMonthlyPeek.Get(req_id, params)
 
 	return list
 

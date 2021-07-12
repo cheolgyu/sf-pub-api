@@ -13,16 +13,16 @@ var SqlMonthlyPeek MonthlyPeekDao
 type MonthlyPeekDao struct {
 }
 
-func (obj MonthlyPeekDao) Get(req_id string, parms model.MonthlyPeekParams) []map[string]interface{} {
+func (obj MonthlyPeekDao) Get(req_id string, params model.MonthlyPeekParams) []map[string]interface{} {
 
 	q := `
 SELECT *
 from public.daily_monthly_peek
 WHERE 1 = 1 and stop is false 
 	`
-	if len(parms.Market) > 0 {
+	if len(params.Market) > 0 {
 		q += `and market in ( `
-		for i, v := range parms.Market {
+		for i, v := range params.Market {
 			if i > 0 {
 				q += ` ,`
 			}
@@ -31,10 +31,10 @@ WHERE 1 = 1 and stop is false
 
 		q += ` ) `
 	}
-	if parms.Sort != "" {
-		q += ` order by  ` + parms.Sort + `  ` + parms.GetDesc() + ` `
+	if params.Sort != "" {
+		q += ` order by  ` + params.Sort + `  ` + params.GetDesc() + ` `
 	}
-	q += `limit ` + strconv.Itoa(parms.Limit) + ` OFFSET ` + strconv.Itoa(parms.Offset)
+	q += `limit ` + strconv.Itoa(params.Limit) + ` OFFSET ` + strconv.Itoa(params.Offset)
 
 	log.Printf("<%s> query=%s \n", req_id, q)
 

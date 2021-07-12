@@ -14,19 +14,19 @@ var SqlViewPrice ViewPrice
 type ViewPrice struct {
 }
 
-func (obj ViewPrice) Select(req_id string, parms model.ViewPriceParams) []map[string]interface{} {
+func (obj ViewPrice) Select(req_id string, params model.ViewPriceParams) []map[string]interface{} {
 
 	q := `SELECT count(*) OVER() AS full_count,* FROM  daily_stock `
 
 	q += ` where  1=1 `
 
-	if parms.Search != "" {
-		q += ` and  name like '%` + parms.Search + `%' `
+	if params.Search != "" {
+		q += ` and  name like '%` + params.Search + `%' `
 	}
-	if len(parms.State) > 0 {
+	if len(params.State) > 0 {
 		q += ` and (  `
 		i := 0
-		for k, v := range parms.State {
+		for k, v := range params.State {
 			if i > 0 {
 				q += ` and `
 			}
@@ -36,9 +36,9 @@ func (obj ViewPrice) Select(req_id string, parms model.ViewPriceParams) []map[st
 		q += ` ) `
 	}
 
-	if len(parms.Market) > 0 {
+	if len(params.Market) > 0 {
 		q += `and market in ( `
-		for i, v := range parms.Market {
+		for i, v := range params.Market {
 			if i > 0 {
 				q += ` ,`
 			}
@@ -48,10 +48,10 @@ func (obj ViewPrice) Select(req_id string, parms model.ViewPriceParams) []map[st
 		q += ` ) `
 	}
 
-	if parms.Sort != "" {
-		q += ` order by  ` + parms.Sort + `  ` + parms.GetDesc() + ` `
+	if params.Sort != "" {
+		q += ` order by  ` + params.Sort + `  ` + params.GetDesc() + ` `
 	}
-	q += `limit ` + strconv.Itoa(parms.Limit) + ` OFFSET ` + strconv.Itoa(parms.Offset)
+	q += `limit ` + strconv.Itoa(params.Limit) + ` OFFSET ` + strconv.Itoa(params.Offset)
 
 	log.Printf("<%s> query=%s \n", req_id, q)
 

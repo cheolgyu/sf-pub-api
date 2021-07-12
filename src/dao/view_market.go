@@ -11,7 +11,7 @@ var SqlMarketDao MarketDao
 type MarketDao struct {
 }
 
-func (obj MarketDao) Select(req_id string, parms model.ViewPriceParams) []map[string]interface{} {
+func (obj MarketDao) Select(req_id string, params model.ViewPriceParams) []map[string]interface{} {
 
 	q := `
 
@@ -21,8 +21,8 @@ func (obj MarketDao) Select(req_id string, parms model.ViewPriceParams) []map[st
         "daily_market"
 	
 	`
-	if parms.Sort != "" {
-		q += ` order by  ` + parms.Sort + `  ` + parms.GetDesc() + ` `
+	if params.Sort != "" {
+		q += ` order by  ` + params.Sort + `  ` + params.GetDesc() + ` `
 	}
 
 	rows, err := DB.Queryx(q)
