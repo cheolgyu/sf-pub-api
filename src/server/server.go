@@ -60,6 +60,22 @@ type ViewPriceResult struct {
 	Market []map[string]interface{} `json:"market"`
 }
 
+func HandlerPriceBound(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	req_id := r.Header.Get("req_id")
+	setCors(&w)
+
+	req_code := ps.ByName("code")
+	tbnm := "hist.price_stock"
+	market, _ := ChkMarketCode(req_code)
+	if market {
+		tbnm = "hist.price_market"
+	}
+
+	list := service.GetHistPriceBound(req_id, r, tbnm)
+	json.NewEncoder(w).Encode(list)
+
+}
+
 func HandlerMonthlyPeek(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	req_id := r.Header.Get("req_id")
 	setCors(&w)
@@ -203,6 +219,7 @@ func server() {
 	router.GET("/", Index)
 	router.GET("/info", HandlerInfo)
 	router.GET("/price", HandlerViewPrice)
+	router.GET("/price/bound/:code", HandlerPriceBound)
 	router.GET("/market", HandlerViewMarket)
 	router.GET("/detail/chartline/:code", HandlerDetailChartLine)
 	router.GET("/detail/chart/:code", HandlerDetailChart)

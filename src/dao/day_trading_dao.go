@@ -13,7 +13,7 @@ var SqlDayTrading DayTradingDao
 type DayTradingDao struct {
 }
 
-func (obj DayTradingDao) Get(req_id string, parms model.DatTradingParms) []map[string]interface{} {
+func (obj DayTradingDao) Get(req_id string, parms model.DatTradingParams) []map[string]interface{} {
 
 	q := `
 SELECT *

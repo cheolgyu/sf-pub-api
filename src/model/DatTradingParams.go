@@ -4,16 +4,16 @@ import (
 	"strconv"
 )
 
-var MPP_AllowSort []string
+var DTP_AllowSort []string
 
 func init() {
-	MPP_AllowSort = append(MPP_AllowSort, "code")
-	MPP_AllowSort = append(MPP_AllowSort, "name")
-	MPP_AllowSort = append(MPP_AllowSort, "peek")
-	MPP_AllowSort = append(MPP_AllowSort, "peek_percent")
+	DTP_AllowSort = append(DTP_AllowSort, "code")
+	DTP_AllowSort = append(DTP_AllowSort, "name")
+	DTP_AllowSort = append(DTP_AllowSort, "avg")
+	DTP_AllowSort = append(DTP_AllowSort, "std")
 }
 
-type MonthlyPeekParms struct {
+type DatTradingParams struct {
 	Limit  int
 	Offset int
 	Sort   string
@@ -21,7 +21,7 @@ type MonthlyPeekParms struct {
 	Market []string
 }
 
-func (obj *MonthlyPeekParms) GetDesc() string {
+func (obj *DatTradingParams) GetDesc() string {
 	if obj.Desc {
 		return "desc"
 	} else {
@@ -29,7 +29,7 @@ func (obj *MonthlyPeekParms) GetDesc() string {
 	}
 }
 
-func (obj *MonthlyPeekParms) SetPageRows(page string, rows string) {
+func (obj *DatTradingParams) SetPageRows(page string, rows string) {
 
 	p, err := strconv.Atoi(page)
 	if err != nil || p == 0 {
@@ -46,16 +46,16 @@ func (obj *MonthlyPeekParms) SetPageRows(page string, rows string) {
 	obj.Offset = offset
 }
 
-func (obj *MonthlyPeekParms) SetSortDesc(sort string, in_desc string) {
+func (obj *DatTradingParams) SetSortDesc(sort string, in_desc string) {
 
 	desc, err := strconv.ParseBool(in_desc)
 	if err != nil {
 		desc = true
 	}
 	obj.Desc = desc
-	obj.Sort = MPP_AllowSort[3]
+	obj.Sort = DTP_AllowSort[2]
 
-	for _, s := range MPP_AllowSort {
+	for _, s := range DTP_AllowSort {
 		if s == sort {
 			obj.Sort = sort
 			break
@@ -64,7 +64,7 @@ func (obj *MonthlyPeekParms) SetSortDesc(sort string, in_desc string) {
 
 }
 
-func (obj *MonthlyPeekParms) SetMarket(market string) {
+func (obj *DatTradingParams) SetMarket(market string) {
 
 	obj.Market = ParseMarketIn(market)
 }

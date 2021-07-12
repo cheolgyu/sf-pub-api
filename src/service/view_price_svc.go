@@ -15,7 +15,7 @@ func GetViewPrice(req_id string, r *http.Request) []map[string]interface{} {
 
 	q := r.URL.Query()
 	log.Printf("<%s>  params=%s \n", req_id, q)
-	vpp := model.ViewPriceParms{}
+	vpp := model.ViewPriceParams{}
 	vpp.SetPageRows(q.Get("page"), q.Get("rows"))
 	vpp.SetSortDesc(q.Get("sort"), q.Get("desc"))
 	vpp.SetEtc(q.Get("market"), q.Get("search"))

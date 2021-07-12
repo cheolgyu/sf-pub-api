@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-type ViewPriceParms struct {
+type ViewPriceParams struct {
 	Limit  int
 	Offset int
 	Sort   string
@@ -16,7 +16,7 @@ type ViewPriceParms struct {
 	Search string
 }
 
-func (obj *ViewPriceParms) GetDesc() string {
+func (obj *ViewPriceParams) GetDesc() string {
 	if obj.Desc {
 		return "desc"
 	} else {
@@ -24,7 +24,7 @@ func (obj *ViewPriceParms) GetDesc() string {
 	}
 }
 
-func (obj *ViewPriceParms) SetPageRows(page string, rows string) {
+func (obj *ViewPriceParams) SetPageRows(page string, rows string) {
 
 	p, err := strconv.Atoi(page)
 	if err != nil {
@@ -41,7 +41,7 @@ func (obj *ViewPriceParms) SetPageRows(page string, rows string) {
 	obj.Offset = offset
 }
 
-func (obj *ViewPriceParms) SetSortDesc(sort string, in_desc string) {
+func (obj *ViewPriceParams) SetSortDesc(sort string, in_desc string) {
 
 	desc, err := strconv.ParseBool(in_desc)
 	if err != nil {
@@ -59,7 +59,7 @@ func (obj *ViewPriceParms) SetSortDesc(sort string, in_desc string) {
 
 }
 
-func (obj *ViewPriceParms) SetEtc(market string, search string) {
+func (obj *ViewPriceParams) SetEtc(market string, search string) {
 
 	obj.Market = ParseMarketIn(market)
 	search = strings.ReplaceAll(search, "-", "")
@@ -68,7 +68,7 @@ func (obj *ViewPriceParms) SetEtc(market string, search string) {
 	obj.Search = search
 }
 
-func (obj *ViewPriceParms) SetState(state string) {
+func (obj *ViewPriceParams) SetState(state string) {
 
 	m_arr := make(map[string]bool)
 	state_str := strings.TrimSpace(state)

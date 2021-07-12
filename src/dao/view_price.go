@@ -14,7 +14,7 @@ var SqlViewPrice ViewPrice
 type ViewPrice struct {
 }
 
-func (obj ViewPrice) Select(req_id string, parms model.ViewPriceParms) []map[string]interface{} {
+func (obj ViewPrice) Select(req_id string, parms model.ViewPriceParams) []map[string]interface{} {
 
 	q := `SELECT count(*) OVER() AS full_count,* FROM  daily_stock `
 

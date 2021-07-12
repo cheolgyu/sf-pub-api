@@ -13,7 +13,7 @@ var SqlMonthlyPeek MonthlyPeekDao
 type MonthlyPeekDao struct {
 }
 
-func (obj MonthlyPeekDao) Get(req_id string, parms model.MonthlyPeekParms) []map[string]interface{} {
+func (obj MonthlyPeekDao) Get(req_id string, parms model.MonthlyPeekParams) []map[string]interface{} {
 
 	q := `
 SELECT *

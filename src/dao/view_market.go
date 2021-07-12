@@ -11,7 +11,7 @@ var SqlMarketDao MarketDao
 type MarketDao struct {
 }
 
-func (obj MarketDao) Select(req_id string, parms model.ViewPriceParms) []map[string]interface{} {
+func (obj MarketDao) Select(req_id string, parms model.ViewPriceParams) []map[string]interface{} {
 
 	q := `
 
