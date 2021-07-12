@@ -11,6 +11,8 @@ var AllowSort [26]string
 var AllowMarket [3]string
 var AllowState [11]string
 
+var AllowG_Type [4]string
+
 func init() {
 	var allSort [26]string
 	allSort[0] = "code"
@@ -64,6 +66,14 @@ func init() {
 	allowState[9] = "warning"
 	allowState[10] = "risk"
 	AllowState = allowState
+
+	var allowG_Type [4]string
+	allowG_Type[0] = "close"
+	allowG_Type[1] = "open"
+	allowG_Type[2] = "low"
+	allowG_Type[3] = "high"
+
+	AllowG_Type = allowG_Type
 }
 
 func ChkMarket(market string) bool {

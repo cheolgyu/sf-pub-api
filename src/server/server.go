@@ -65,13 +65,13 @@ func HandlerPriceBound(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 	setCors(&w)
 
 	req_code := ps.ByName("code")
-	tbnm := "hist.price_stock"
+	tbnm := "hist.bound_stock"
 	market, _ := ChkMarketCode(req_code)
 	if market {
-		tbnm = "hist.price_market"
+		tbnm = "hist.bound_market"
 	}
 
-	list := service.GetHistPriceBound(req_id, r, tbnm)
+	list := service.GetHistPriceBound(req_id, r, tbnm, req_code)
 	json.NewEncoder(w).Encode(list)
 
 }
