@@ -16,7 +16,7 @@ type HistPriceBoundDao struct {
 func (obj HistPriceBoundDao) SelectList(req_id string, params model.HistPriceParams) []map[string]interface{} {
 
 	q := `
-	SELECT *
+	SELECT count(*) OVER() AS full_count,*
 	from ` + params.TbName + `
 	WHERE 1 = 1
 	and code ='` + params.Code + `'
