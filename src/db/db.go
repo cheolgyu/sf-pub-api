@@ -15,13 +15,6 @@ func Conn() *sqlx.DB {
 		log.Panic("Error loading .env file")
 	}
 	DB_URL := os.Getenv("DB_URL")
-	log.Println("============================")
-	log.Println("============================")
-	log.Println("============================")
-	log.Println("============================")
-	log.Println("============================")
-	log.Println(DB_URL)
-
 	conn_db, err := sqlx.Open("postgres", DB_URL)
 	if err != nil {
 		log.Println("커넥션 오류:", err)
