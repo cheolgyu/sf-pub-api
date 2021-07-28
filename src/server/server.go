@@ -12,6 +12,8 @@ import (
 	"github.com/cheolgyu/stock-read-pub-api/src/db"
 	"github.com/cheolgyu/stock-read-pub-api/src/service"
 	"github.com/cheolgyu/stock-read-pub-api/src/svc/company"
+	"github.com/cheolgyu/stock-read-pub-api/src/svc/meta"
+	"github.com/cheolgyu/stock-read-pub-api/src/svc/price"
 	"github.com/google/uuid"
 	"github.com/julienschmidt/httprouter"
 )
@@ -169,11 +171,16 @@ func server() {
 	})
 
 	router.GET("/", Index)
-	router.GET("/config/market_list", HandlerMarketList)
+
 	router.GET("/info", HandlerInfo)
-	router.GET("/price", HandlerViewPrice)
+
 	router.GET("/price/bound/:code", HandlerPriceBound)
-	router.GET("/market", HandlerViewMarket)
+
+	//router.GET("/config/market_list", HandlerMarketList)
+
+	// router.GET("/price", HandlerViewPrice)
+	// router.GET("/market", HandlerViewMarket)
+
 	//	router.GET("/detail/chartline/:code", HandlerDetailChartLine)
 	//router.GET("/detail/chart/:code", HandlerDetailChart)
 	//router.GET("/detail/company/:code", HandlerDetailCompany)
@@ -181,9 +188,17 @@ func server() {
 
 	db_conn := db.Conn()
 
+	meta_repo := meta.NewRepository(db_conn)
+	meta_usecase := meta.NewUsecase(meta_repo, timeoutContext)
+	meta.NewHandler(router, meta_usecase)
+
 	cmp_repo := company.NewRepository(db_conn)
 	cmp_usecase := company.NewUsecase(cmp_repo, timeoutContext)
-	company.NewCompanyHandler(router, cmp_usecase)
+	company.NewHandler(router, cmp_usecase)
+
+	price_repo := price.NewRepository(db_conn)
+	price_usecase := price.NewUsecase(price_repo, meta_repo, timeoutContext)
+	price.NewHandler(router, price_usecase)
 
 	router.GET("/day_trading", HandlerDayTrading)
 	router.GET("/monthly_peek", HandlerMonthlyPeek)

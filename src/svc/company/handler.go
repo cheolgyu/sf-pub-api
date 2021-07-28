@@ -15,7 +15,7 @@ type Handler struct {
 	usecase domain.CompanyUsecase
 }
 
-func NewCompanyHandler(r *httprouter.Router, cmp_usecase domain.CompanyUsecase) {
+func NewHandler(r *httprouter.Router, cmp_usecase domain.CompanyUsecase) {
 
 	h := Handler{usecase: cmp_usecase}
 	//chk := CheckHandler{}

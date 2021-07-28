@@ -19,6 +19,8 @@ gin -i --appPort 5001  --port 5000  run  main.go
 var isDebug bool = true
 
 func init() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
 	err := godotenv.Load(".env.local")
 	if err != nil {
 		log.Panic("Error loading .env file")
