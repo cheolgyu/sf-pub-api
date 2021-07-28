@@ -37,7 +37,7 @@ func (obj *Handler) GetStockByPaging(w http.ResponseWriter, r *http.Request, ps 
 	//ctx := r.Context()
 	cmp, err := obj.usecase.GetStockByPaging(context.TODO(), paging)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 	json.NewEncoder(w).Encode(cmp)
 	log.Println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", req_id)
@@ -58,7 +58,7 @@ func (obj *Handler) GetMarketByPaging(w http.ResponseWriter, r *http.Request, ps
 
 	cmp, err := obj.usecase.GetMarketByPaging(context.TODO(), paging)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 	json.NewEncoder(w).Encode(cmp)
 	log.Println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", req_id)

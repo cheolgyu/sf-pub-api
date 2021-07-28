@@ -2,6 +2,7 @@ package domain
 
 import (
 	"context"
+	"errors"
 	"log"
 	"net/url"
 	"strconv"
@@ -75,7 +76,7 @@ func (obj *PricePagingString) Valid(market_list []Config, column_name map[string
 
 	if market_type, err = obj.valid_marekt_type(market_list); err != nil {
 		res.Market = market_type
-		log.Fatalln(err)
+		log.Println(err)
 	} else {
 		res.Market = market_type
 	}
@@ -92,12 +93,15 @@ func (obj *PricePagingString) Valid(market_list []Config, column_name map[string
 
 func (obj *PricePagingString) valid_rows_page() (limit int, offsest int, err error) {
 	p, limit := 1, DefaultRows
-	if p, err = strconv.Atoi(obj.Page); err != nil {
-		log.Fatalln(err)
+	if obj.Page != "" {
+		if p, err = strconv.Atoi(obj.Page); err != nil {
+			log.Println(err)
+		}
 	}
-
-	if limit, err = strconv.Atoi(obj.Rows); err != nil {
-		log.Fatalln(err)
+	if obj.Rows != "" {
+		if limit, err = strconv.Atoi(obj.Rows); err != nil {
+			log.Fatalln(err)
+		}
 	}
 
 	offset := (p - 1) * limit
@@ -138,21 +142,25 @@ func (obj *PricePagingString) valid_search() (search string, err error) {
 }
 
 func (obj *PricePagingString) valid_marekt_type(market_list []Config) (marekt_type []int, err error) {
-	inp_marekt_str := obj.Market
+	if obj.Market != "" {
+		inp_marekt_str := obj.Market
 
-	market_str := strings.TrimSpace(inp_marekt_str)
-	inp_arr := strings.Split(market_str, ",")
+		market_str := strings.TrimSpace(inp_marekt_str)
+		inp_arr := strings.Split(market_str, ",")
 
-	for i := range market_list {
-		for j := range inp_arr {
-			var num1 int
-			num1, err = strconv.Atoi(inp_arr[j])
+		for i := range market_list {
+			for j := range inp_arr {
+				var num1 int
+				num1, err = strconv.Atoi(inp_arr[j])
 
-			if market_list[i].Id == num1 {
-				marekt_type = append(marekt_type, num1)
+				if market_list[i].Id == num1 {
+					marekt_type = append(marekt_type, num1)
+				}
 			}
-		}
 
+		}
+	} else {
+		err = errors.New("market을 확일할 수 없습니다.\n")
 	}
 
 	return marekt_type, err

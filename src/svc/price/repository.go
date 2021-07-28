@@ -90,8 +90,8 @@ func (obj *PriceRepository) GetStockByPaging(ctx context.Context, params domain.
 			panic(err)
 		}
 		list = append(list, Decode(item))
-
 	}
+
 	return list, err
 }
 
@@ -120,7 +120,7 @@ func (obj *PriceRepository) GetMarketByPaging(ctx context.Context, params domain
 			panic(err)
 		}
 		list = append(list, Decode(item))
-
 	}
+
 	return list, err
 }
