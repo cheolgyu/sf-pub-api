@@ -13,14 +13,7 @@ type MarketDao struct {
 
 func (obj MarketDao) Select(req_id string, params model.ViewPriceParams) []map[string]interface{} {
 
-	q := `
-
-    SELECT
-        *
-    FROM
-        "daily_market"
-	
-	`
+	q := `  SELECT  *  FROM  "view_market" 	`
 	if params.Sort != "" {
 		q += ` order by  ` + params.Sort + `  ` + params.GetDesc() + ` `
 	}

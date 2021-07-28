@@ -16,12 +16,10 @@ type ViewPrice struct {
 
 func (obj ViewPrice) Select(req_id string, params model.ViewPriceParams) []map[string]interface{} {
 
-	q := `SELECT count(*) OVER() AS full_count,* FROM  daily_stock `
-
+	q := `SELECT count(*) OVER() AS full_count,* FROM  view_stock `
 	q += ` where  1=1 `
-
 	if params.Search != "" {
-		q += ` and  name like '%` + params.Search + `%' `
+		q += ` and  name  like '%` + params.Search + `%' `
 	}
 	if len(params.State) > 0 {
 		q += ` and (  `
@@ -37,7 +35,7 @@ func (obj ViewPrice) Select(req_id string, params model.ViewPriceParams) []map[s
 	}
 
 	if len(params.Market) > 0 {
-		q += `and market in ( `
+		q += `and market_type_name in ( `
 		for i, v := range params.Market {
 			if i > 0 {
 				q += ` ,`

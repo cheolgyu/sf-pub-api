@@ -91,6 +91,7 @@ func ChkMarket(market string) bool {
 }
 
 func ParseMarketIn(market string) []string {
+
 	keys := []string{}
 	m_arr := make(map[string]bool)
 	market_str := strings.TrimSpace(market)

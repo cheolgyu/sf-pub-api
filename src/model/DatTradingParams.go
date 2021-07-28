@@ -9,16 +9,27 @@ var DTP_AllowSort []string
 func init() {
 	DTP_AllowSort = append(DTP_AllowSort, "code")
 	DTP_AllowSort = append(DTP_AllowSort, "name")
-	DTP_AllowSort = append(DTP_AllowSort, "avg")
-	DTP_AllowSort = append(DTP_AllowSort, "std")
+	DTP_AllowSort = append(DTP_AllowSort, "avg_l2h")
+	DTP_AllowSort = append(DTP_AllowSort, "avg_o2c")
+	DTP_AllowSort = append(DTP_AllowSort, "std_l2h")
+	DTP_AllowSort = append(DTP_AllowSort, "std_o2c")
 }
 
 type DatTradingParams struct {
+	Term   int
 	Limit  int
 	Offset int
 	Sort   string
 	Desc   bool
 	Market []string
+}
+
+func (obj *DatTradingParams) SetTerm(inp string) {
+	p, err := strconv.Atoi(inp)
+	if err != nil || p == 0 {
+		p = 1
+	}
+	obj.Term = p
 }
 
 func (obj *DatTradingParams) GetDesc() string {

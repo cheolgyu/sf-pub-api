@@ -1,8 +1,8 @@
 package dao
 
 import (
+	"fmt"
 	"log"
-	"strconv"
 
 	"github.com/cheolgyu/stock-read-pub-api/src/model"
 	"github.com/jmoiron/sqlx"
@@ -14,37 +14,19 @@ type DayTradingDao struct {
 }
 
 func (obj DayTradingDao) Get(req_id string, params model.DatTradingParams) []map[string]interface{} {
+	// select * from project.func_day_trading(10,10,1,'avg_l2h','desc',ARRAY[	7,9]);
+	q := "select * from project.func_day_trading(%v, %v, %v, %v, %s, ARRAY[ %s])"
+	query := fmt.Sprintf(q, params.Term, params.Limit, params.Offset, params.Sort, params.GetDesc(), params.Market)
 
-	q := `
-SELECT *
-from public.tb_daily_day_trading
-WHERE 1 = 1
-	`
-	if len(params.Market) > 0 {
-		q += `and market in ( `
-		for i, v := range params.Market {
-			if i > 0 {
-				q += ` ,`
-			}
-			q += ` '` + v + `' `
-		}
-
-		q += ` ) `
-	}
-	if params.Sort != "" {
-		q += ` order by  ` + params.Sort + `  ` + params.GetDesc() + ` `
-	}
-	q += `limit ` + strconv.Itoa(params.Limit) + ` OFFSET ` + strconv.Itoa(params.Offset)
-
-	log.Printf("<%s> query=%s \n", req_id, q)
+	log.Printf("<%s> query=%s \n", req_id, query)
 
 	var rows *sqlx.Rows
 	var err error
-	rows, err = DB.Queryx(q)
+	rows, err = DB.Queryx(query)
 
 	if err != nil {
 		log.Printf("DayTradingDao:Queryx::error::::<%s>  \n", req_id)
-		log.Printf("DayTradingDao:Queryx::error::::<%s> query= \n", q)
+		log.Printf("DayTradingDao:Queryx::error::::<%s> query= \n", query)
 		panic(err)
 	}
 

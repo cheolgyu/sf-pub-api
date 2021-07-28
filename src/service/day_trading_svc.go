@@ -19,6 +19,7 @@ func GetDayTrading(req_id string, r *http.Request) []map[string]interface{} {
 	var list []map[string]interface{}
 	params := model.DatTradingParams{}
 	params.SetMarket(q.Get("market"))
+	params.SetTerm(q.Get("term"))
 	params.SetSortDesc(q.Get("sort"), q.Get("desc"))
 	params.SetPageRows(q.Get("page"), q.Get("rows"))
 
