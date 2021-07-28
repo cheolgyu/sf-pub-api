@@ -10,10 +10,8 @@ import (
 
 	"github.com/cheolgyu/stock-read-pub-api/src/config"
 	"github.com/cheolgyu/stock-read-pub-api/src/db"
-	"github.com/cheolgyu/stock-read-pub-api/src/handler"
-	"github.com/cheolgyu/stock-read-pub-api/src/repo"
 	"github.com/cheolgyu/stock-read-pub-api/src/service"
-	"github.com/cheolgyu/stock-read-pub-api/src/usecase"
+	"github.com/cheolgyu/stock-read-pub-api/src/svc/company"
 	"github.com/google/uuid"
 	"github.com/julienschmidt/httprouter"
 )
@@ -45,7 +43,7 @@ func (m *Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	setCors(&w)
 	m.next.ServeHTTP(w, r)
 
-	log.Printf("[Middleware] <%s> %s \n", req_id, w.Header())
+	//log.Printf("[Middleware] <%s> %s \n", req_id, w.Header())
 }
 
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -183,10 +181,9 @@ func server() {
 
 	db_conn := db.Conn()
 
-	cmp_rp := repo.NewCompnayRepository(db_conn)
-	cmp_uc := usecase.NewCompanyUsecase(cmp_rp, timeoutContext)
-
-	handler.NewOneStockHandler(router, cmp_uc)
+	cmp_repo := company.NewRepository(db_conn)
+	cmp_usecase := company.NewUsecase(cmp_repo, timeoutContext)
+	company.NewCompanyHandler(router, cmp_usecase)
 
 	router.GET("/day_trading", HandlerDayTrading)
 	router.GET("/monthly_peek", HandlerMonthlyPeek)
