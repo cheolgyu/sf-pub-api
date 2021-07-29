@@ -60,30 +60,7 @@ type ViewPriceResult struct {
 	Price  []map[string]interface{} `json:"price"`
 	Market []map[string]interface{} `json:"market"`
 }
-
-func HandlerMarketList(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	req_id := r.Header.Get("req_id")
-
-	list := service.SelectMarketList(req_id, r)
-	json.NewEncoder(w).Encode(list)
-
-}
-
-func HandlerPriceBound(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	req_id := r.Header.Get("req_id")
-
-	req_code := ps.ByName("code")
-	tbnm := "hist.bound_stock"
-	market, _ := ChkMarketCode(req_code)
-	if market {
-		tbnm = "hist.bound_market"
-	}
-
-	list := service.GetHistPriceBound(req_id, r, tbnm, req_code)
-	json.NewEncoder(w).Encode(list)
-
-}
-
+sas
 func HandlerMonthlyPeek(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	req_id := r.Header.Get("req_id")
 
@@ -105,30 +82,6 @@ func HandlerInfo(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	info := service.GetInfo(req_id)
 	res.Info = info
 	json.NewEncoder(w).Encode(res)
-}
-
-func HandlerViewPrice(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	req_id := r.Header.Get("req_id")
-
-	list := service.GetViewPrice(req_id, r)
-	info := service.GetInfo(req_id)
-	res := ViewPriceResult{}
-	res.Info = info
-	res.Price = list
-	json.NewEncoder(w).Encode(res)
-
-}
-func HandlerViewMarket(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	req_id := r.Header.Get("req_id")
-
-	info := service.GetInfo(req_id)
-	market_list := service.GetMarket(req_id, r)
-	//log.Println(market_list)
-	res := ViewPriceResult{}
-	res.Info = info
-	res.Market = market_list
-	json.NewEncoder(w).Encode(res)
-
 }
 
 func ChkMarketCode(code string) (bool, int) {
@@ -174,7 +127,7 @@ func server() {
 
 	router.GET("/info", HandlerInfo)
 
-	router.GET("/price/bound/:code", HandlerPriceBound)
+	//router.GET("/price/bound/:code", HandlerPriceBound)
 
 	//router.GET("/config/market_list", HandlerMarketList)
 
@@ -193,7 +146,7 @@ func server() {
 	meta.NewHandler(router, meta_usecase)
 
 	cmp_repo := company.NewRepository(db_conn)
-	cmp_usecase := company.NewUsecase(cmp_repo, timeoutContext)
+	cmp_usecase := company.NewUsecase(cmp_repo, meta_repo, timeoutContext)
 	company.NewHandler(router, cmp_usecase)
 
 	price_repo := price.NewRepository(db_conn)
