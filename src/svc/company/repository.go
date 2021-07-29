@@ -180,7 +180,7 @@ func (obj *CompanyRepository) GetReboundByPaging(ctx context.Context, params dom
 	q += `limit ` + strconv.Itoa(params.Paging.Limit) + ` OFFSET ` + strconv.Itoa(params.Paging.Offset)
 
 	log.Printf("query=%s \n", q)
-
+	//	log.Println(fmt.Sprintf("%+v", params.Paging))
 	var rows *sqlx.Rows
 	var err error
 	rows, err = obj.conn.Queryx(q)

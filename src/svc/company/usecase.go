@@ -44,7 +44,7 @@ func (obj *CompanyUsecase) GetGraphNextLineByCode(ctx context.Context, code stri
 
 func (obj *CompanyUsecase) GetReboundByPaging(ctx context.Context, params_string domain.CompanyHisteParamsString) ([]map[string]interface{}, error) {
 
-	paging, err := params_string.Valid(obj.var_price_type_list, obj.var_column_name, "hist.rebound")
+	paging, err := params_string.Valid(obj.var_price_type_list, obj.var_column_name, "rebound")
 	if err != nil {
 		log.Println(err)
 		panic(err)
