@@ -30,7 +30,7 @@ func (obj *Handler) GetStockByPaging(w http.ResponseWriter, r *http.Request, ps 
 	////////////////////////////////////////////////////////
 	q := r.URL.Query()
 	log.Printf("<%s>  params=%s \n", req_id, q)
-	paging := domain.PricePagingString{}
+	paging := domain.PriceParamsString{}
 	paging.Set(q)
 	////////////////////////////////////////////////////////
 

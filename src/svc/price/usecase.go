@@ -28,7 +28,7 @@ func NewUsecase(cr domain.PriceRepository, meta_repo domain.MetaRepository, time
 	}
 }
 
-func (obj *PriceUsecase) GetStockByPaging(ctx context.Context, params_string domain.PricePagingString) ([]map[string]interface{}, error) {
+func (obj *PriceUsecase) GetStockByPaging(ctx context.Context, params_string domain.PriceParamsString) ([]map[string]interface{}, error) {
 
 	paging, err := params_string.Valid(obj.var_market_list, obj.var_column_name, "view_stock")
 	if err != nil {
@@ -38,7 +38,7 @@ func (obj *PriceUsecase) GetStockByPaging(ctx context.Context, params_string dom
 	return obj.priceRepo.GetStockByPaging(context.TODO(), paging)
 }
 
-func (obj *PriceUsecase) GetMarketByPaging(ctx context.Context, params_string domain.PricePagingString) ([]map[string]interface{}, error) {
+func (obj *PriceUsecase) GetMarketByPaging(ctx context.Context, params_string domain.PriceParamsString) ([]map[string]interface{}, error) {
 
 	paging, err := params_string.Valid(obj.var_market_list, obj.var_column_name, "view_market")
 	if err != nil {

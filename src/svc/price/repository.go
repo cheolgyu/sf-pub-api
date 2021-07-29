@@ -29,7 +29,7 @@ func NewRepository(Conn *sqlx.DB) domain.PriceRepository {
 	return &PriceRepository{conn: Conn}
 }
 
-func (obj *PriceRepository) GetStockByPaging(ctx context.Context, params domain.PricePaging) ([]map[string]interface{}, error) {
+func (obj *PriceRepository) GetStockByPaging(ctx context.Context, params domain.PriceParams) ([]map[string]interface{}, error) {
 
 	q := `SELECT count(*) OVER() AS full_count,* FROM  view_stock `
 	q += ` where  1=1 `
@@ -61,10 +61,10 @@ func (obj *PriceRepository) GetStockByPaging(ctx context.Context, params domain.
 		q += ` ) `
 	}
 
-	if params.Sort != "" {
-		q += ` order by  ` + params.Sort + `  ` + params.Desc + ` `
+	if params.Paging.Sort != "" {
+		q += ` order by  ` + params.Paging.Sort + `  ` + params.Paging.Desc + ` `
 	}
-	q += `limit ` + strconv.Itoa(params.Limit) + ` OFFSET ` + strconv.Itoa(params.Offset)
+	q += `limit ` + strconv.Itoa(params.Paging.Limit) + ` OFFSET ` + strconv.Itoa(params.Paging.Offset)
 
 	log.Printf("query=%s \n", q)
 
@@ -98,8 +98,8 @@ func (obj *PriceRepository) GetStockByPaging(ctx context.Context, params domain.
 func (obj *PriceRepository) GetMarketByPaging(ctx context.Context, params domain.PriceParams) ([]map[string]interface{}, error) {
 
 	q := `  SELECT  *  FROM  "view_market" 	`
-	if params.Sort != "" {
-		q += ` order by  ` + params.Sort + `  ` + params.Desc + ` `
+	if params.Paging.Sort != "" {
+		q += ` order by  ` + params.Paging.Sort + `  ` + params.Paging.Desc + ` `
 	}
 	rows, err := obj.conn.Queryx(q)
 	if err != nil {
