@@ -95,7 +95,7 @@ func (obj *PriceRepository) GetStockByPaging(ctx context.Context, params domain.
 	return list, err
 }
 
-func (obj *PriceRepository) GetMarketByPaging(ctx context.Context, params domain.PricePaging) ([]map[string]interface{}, error) {
+func (obj *PriceRepository) GetMarketByPaging(ctx context.Context, params domain.PriceParams) ([]map[string]interface{}, error) {
 
 	q := `  SELECT  *  FROM  "view_market" 	`
 	if params.Sort != "" {

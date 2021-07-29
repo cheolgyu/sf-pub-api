@@ -8,7 +8,7 @@ import (
 
 const DefaultRows = 30
 
-type PagingStr struct {
+type PagingString struct {
 	Rows string
 	Page string
 	Sort string
@@ -22,14 +22,14 @@ type Paging struct {
 	Desc   string
 }
 
-func (obj *PagingStr) Set(query url.Values) {
+func (obj *PagingString) Set(query url.Values) {
 	obj.Rows = query.Get("rows")
 	obj.Page = query.Get("page")
 	obj.Sort = query.Get("sort")
 	obj.Desc = query.Get("desc")
 }
 
-func (obj *PagingStr) Valid(sort_column_name map[string][]string, tb_name string) (res Paging, err error) {
+func (obj *PagingString) Valid(sort_column_name map[string][]string, tb_name string) (res Paging, err error) {
 	var limit, offset int
 	var sort, desc string
 
@@ -54,7 +54,7 @@ func (obj *PagingStr) Valid(sort_column_name map[string][]string, tb_name string
 	return res, err
 }
 
-func (obj *PagingStr) valid_rows_page() (limit int, offsest int, err error) {
+func (obj *PagingString) valid_rows_page() (limit int, offsest int, err error) {
 	p, limit := 1, DefaultRows
 	if obj.Page != "" {
 		if p, err = strconv.Atoi(obj.Page); err != nil {
@@ -72,7 +72,7 @@ func (obj *PagingStr) valid_rows_page() (limit int, offsest int, err error) {
 	return limit, offset, err
 }
 
-func (obj *PagingStr) valid_sort_desc(sort_column_name []string) (sort string, desc string, err error) {
+func (obj *PagingString) valid_sort_desc(sort_column_name []string) (sort string, desc string, err error) {
 	var desc_bool bool
 
 	if desc_bool, err = strconv.ParseBool(obj.Desc); err != nil {

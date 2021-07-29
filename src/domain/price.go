@@ -24,10 +24,10 @@ type PriceRepository interface {
 }
 
 type PriceParamsString struct {
-	PagingStr utils.PagingStr
-	Market    string
-	State     string
-	Search    string
+	PagingString utils.PagingString
+	Market       string
+	State        string
+	Search       string
 }
 
 type PriceParams struct {
@@ -38,7 +38,7 @@ type PriceParams struct {
 }
 
 func (obj *PriceParamsString) Set(query url.Values) {
-	obj.PagingStr.Set(query)
+	obj.PagingString.Set(query)
 	obj.Market = query.Get("market")
 	obj.State = query.Get("state")
 	obj.Search = query.Get("search")
@@ -50,7 +50,7 @@ func (obj *PriceParamsString) Valid(market_list []Config, sort_column_name map[s
 	var market_type []int
 	var state map[string]bool
 
-	if paging, err = obj.PagingStr.Valid(sort_column_name, tb_name); err != nil {
+	if paging, err = obj.PagingString.Valid(sort_column_name, tb_name); err != nil {
 		log.Fatalln(err)
 	}
 	res.Paging = paging

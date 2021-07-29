@@ -21,8 +21,9 @@ func NewHandler(r *httprouter.Router, cmp_usecase domain.CompanyUsecase) {
 	//chk := CheckHandler{}
 
 	r.GET("/company/:code", h.GetCompany)
-	r.GET("/company_chart/:code", h.GetGraphByCodeID)
-	r.GET("/company_chart_next/:code", h.GetGraphNextLineByCode)
+	r.GET("/company/rebound/:code", h.GetReboundByPaging)
+	r.GET("/company/chart/:code", h.GetGraphByCodeID)
+	r.GET("/company/chart/next/:code", h.GetGraphNextLineByCode)
 
 }
 
@@ -68,6 +69,26 @@ func (obj *Handler) GetGraphNextLineByCode(w http.ResponseWriter, r *http.Reques
 	req_code := ps.ByName("code")
 
 	cmp, err := obj.usecase.GetGraphNextLineByCode(context.TODO(), req_code)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	json.NewEncoder(w).Encode(cmp)
+	log.Println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", req_id)
+
+}
+
+func (obj *Handler) GetReboundByPaging(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	req_id := r.Header.Get("req_id")
+
+	req_code := ps.ByName("code")
+	q := r.URL.Query()
+	q.Set("code", req_code)
+	log.Printf("<%s>  params=%s \n", req_id, q)
+	paging := domain.CompanyHisteParamsString{}
+	paging.Set(q)
+
+	//ctx := r.Context()
+	cmp, err := obj.usecase.GetReboundByPaging(context.TODO(), paging)
 	if err != nil {
 		log.Fatalln(err)
 	}
