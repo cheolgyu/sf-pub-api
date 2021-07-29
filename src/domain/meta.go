@@ -7,14 +7,15 @@ type Meta struct {
 
 type MetaUsecase interface {
 	GetMarketList(ctx context.Context) ([]Config, error)
-	GetColumnName(ctx context.Context, table_name string) ([]string, error)
 }
 
 type MetaRepository interface {
 	VarMarketList() []Config
+	VarPriceTypeList() []Config
 	VarColumnName() map[string][]string
 
 	GetMarketList(ctx context.Context) ([]Config, error)
+	GetPriceTypeList(ctx context.Context) ([]Config, error)
 	GetColumnName(ctx context.Context, table string) ([]string, error)
 }
 

@@ -5,8 +5,10 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"strconv"
 
 	"github.com/cheolgyu/stock-read-pub-api/src/domain"
+	"github.com/cheolgyu/stock-read-pub-api/src/domain/utils"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -160,4 +162,48 @@ func (obj *CompanyRepository) GetGraphNextLineByCode(ctx context.Context, code s
 	} else {
 		return "", err
 	}
+}
+
+func (obj *CompanyRepository) GetReboundByPaging(ctx context.Context, params domain.CompanyHisteParams) ([]map[string]interface{}, error) {
+
+	q := `
+	SELECT count(*) OVER() AS full_count,*
+	from hist.rebound
+	WHERE 1 = 1
+	and code ='` + params.Code + `'
+	and price_type ='` + fmt.Sprintf("%v", params.Price_type) + `'
+	`
+
+	if params.Paging.Sort != "" {
+		q += ` order by  ` + params.Paging.Sort + `  ` + params.Paging.Desc + ` `
+	}
+	q += `limit ` + strconv.Itoa(params.Paging.Limit) + ` OFFSET ` + strconv.Itoa(params.Paging.Offset)
+
+	log.Printf("query=%s \n", q)
+
+	var rows *sqlx.Rows
+	var err error
+	rows, err = obj.conn.Queryx(q)
+
+	if err != nil {
+		log.Printf("GetReboundByPaging:Queryx::error::::<%s> query= \n", q)
+		panic(err)
+	}
+
+	defer rows.Close()
+
+	var list []map[string]interface{}
+
+	for rows.Next() {
+		item := make(map[string]interface{})
+
+		err = rows.MapScan(item)
+
+		if err != nil {
+			panic(err)
+		}
+		list = append(list, utils.Decode(item))
+	}
+
+	return list, err
 }

@@ -10,9 +10,10 @@ import (
 )
 
 type MetaRepository struct {
-	conn       *sqlx.DB
-	ColumnName map[string][]string
-	MarketList []domain.Config
+	conn          *sqlx.DB
+	ColumnName    map[string][]string
+	MarketList    []domain.Config
+	PriceTypeList []domain.Config
 }
 
 func NewRepository(Conn *sqlx.DB) domain.MetaRepository {
@@ -24,8 +25,10 @@ func NewRepository(Conn *sqlx.DB) domain.MetaRepository {
 }
 func (obj *MetaRepository) init() (err error) {
 	obj.setMarketList()
+	obj.setPriceTypeList()
 	obj.setColumnName("view_stock")
 	obj.setColumnName("view_market")
+	obj.setColumnName("hist.rebound")
 
 	return err
 }
@@ -43,8 +46,20 @@ func (obj *MetaRepository) setMarketList() (res []domain.Config, err error) {
 	return res, err
 }
 
+func (obj *MetaRepository) setPriceTypeList() (res []domain.Config, err error) {
+	if res, err = obj.GetPriceTypeList(context.TODO()); err != nil {
+		log.Fatalln(err)
+	}
+	obj.PriceTypeList = res
+	return res, err
+}
+
 func (obj *MetaRepository) VarMarketList() []domain.Config {
 	return obj.MarketList
+}
+
+func (obj *MetaRepository) VarPriceTypeList() []domain.Config {
+	return obj.PriceTypeList
 }
 
 func (obj *MetaRepository) VarColumnName() map[string][]string {
@@ -54,6 +69,26 @@ func (obj *MetaRepository) VarColumnName() map[string][]string {
 func (obj *MetaRepository) GetMarketList(ctx context.Context) (res []domain.Config, err error) {
 
 	q := `SELECT  *  FROM  meta.config where  upper_code = 'market_type' and code in ('KOSPI','KOSDAQ','KONEX') `
+	rows, err := obj.conn.Queryx(q)
+
+	for rows.Next() {
+		item := domain.Config{}
+
+		err = rows.StructScan(&item)
+		if err != nil {
+			log.Printf("GetMarketList:MapScan::error::::<%s>  \n", err)
+			panic(err)
+		}
+		res = append(res, item)
+
+	}
+
+	return res, err
+}
+
+func (obj *MetaRepository) GetPriceTypeList(ctx context.Context) (res []domain.Config, err error) {
+
+	q := `SELECT  *  FROM  meta.config where  upper_code = 'price_type' `
 	rows, err := obj.conn.Queryx(q)
 
 	for rows.Next() {

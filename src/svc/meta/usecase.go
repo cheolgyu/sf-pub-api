@@ -23,7 +23,3 @@ func NewUsecase(cr domain.MetaRepository, timeout time.Duration) domain.MetaUsec
 func (obj *MetaUsecase) GetMarketList(ctx context.Context) ([]domain.Config, error) {
 	return obj.metaRepo.GetMarketList(context.TODO())
 }
-
-func (obj *MetaUsecase) GetColumnName(ctx context.Context, table_name string) ([]string, error) {
-	return obj.metaRepo.GetColumnName(context.TODO(), table_name)
-}

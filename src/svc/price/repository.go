@@ -7,18 +7,9 @@ import (
 	"strconv"
 
 	"github.com/cheolgyu/stock-read-pub-api/src/domain"
+	"github.com/cheolgyu/stock-read-pub-api/src/domain/utils"
 	"github.com/jmoiron/sqlx"
 )
-
-func Decode(item map[string]interface{}) map[string]interface{} {
-	for k, v := range item {
-		if b, ok := v.([]byte); ok {
-			item[k] = string(b)
-		}
-		//item[k] = string(v) //v.decode("base64")
-	}
-	return item
-}
 
 type PriceRepository struct {
 	conn *sqlx.DB
@@ -89,7 +80,7 @@ func (obj *PriceRepository) GetStockByPaging(ctx context.Context, params domain.
 		if err != nil {
 			panic(err)
 		}
-		list = append(list, Decode(item))
+		list = append(list, utils.Decode(item))
 	}
 
 	return list, err
@@ -119,7 +110,7 @@ func (obj *PriceRepository) GetMarketByPaging(ctx context.Context, params domain
 		if err != nil {
 			panic(err)
 		}
-		list = append(list, Decode(item))
+		list = append(list, utils.Decode(item))
 	}
 
 	return list, err
