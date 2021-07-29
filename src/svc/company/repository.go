@@ -170,7 +170,7 @@ func (obj *CompanyRepository) GetReboundByPaging(ctx context.Context, params dom
 	SELECT count(*) OVER() AS full_count,*
 	from hist.rebound
 	WHERE 1 = 1
-	and code ='` + params.Code + `'
+	and code_id = (select id from meta.code where code= '` + params.Code + `')
 	and price_type ='` + fmt.Sprintf("%v", params.Price_type) + `'
 	`
 

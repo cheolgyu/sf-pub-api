@@ -20,6 +20,6 @@ func NewUsecase(cr domain.MetaRepository, timeout time.Duration) domain.MetaUsec
 	}
 }
 
-func (obj *MetaUsecase) GetMarketList(ctx context.Context) ([]domain.Config, error) {
-	return obj.metaRepo.GetMarketList(context.TODO())
+func (obj *MetaUsecase) GetConfig(ctx context.Context) ([]domain.Config, error) {
+	return obj.metaRepo.GetConfig(context.TODO())
 }

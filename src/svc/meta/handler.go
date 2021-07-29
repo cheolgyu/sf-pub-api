@@ -19,15 +19,15 @@ func NewHandler(r *httprouter.Router, cmp_usecase domain.MetaUsecase) {
 	h := Handler{usecase: cmp_usecase}
 	//chk := CheckHandler{}
 
-	r.GET("/config/market_list", h.GetMarketList)
+	r.GET("/config", h.GetConfig)
 
 }
 
-func (obj *Handler) GetMarketList(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (obj *Handler) GetConfig(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	req_id := r.Header.Get("req_id")
 
 	//ctx := r.Context()
-	cmp, err := obj.usecase.GetMarketList(context.TODO())
+	cmp, err := obj.usecase.GetConfig(context.TODO())
 	if err != nil {
 		log.Fatalln(err)
 	}

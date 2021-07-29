@@ -21,9 +21,9 @@ func NewHandler(r *httprouter.Router, cmp_usecase domain.CompanyUsecase) {
 	//chk := CheckHandler{}
 
 	r.GET("/company/:code", h.GetCompany)
-	r.GET("/company/rebound/:code", h.GetReboundByPaging)
-	r.GET("/company/chart/:code", h.GetGraphByCodeID)
-	r.GET("/company/chart/next/:code", h.GetGraphNextLineByCode)
+	r.GET("/company/:code/rebound", h.GetReboundByPaging)
+	r.GET("/company/:code/chart", h.GetGraphByCodeID)
+	r.GET("/company/:code/chart/next", h.GetGraphNextLineByCode)
 
 }
 

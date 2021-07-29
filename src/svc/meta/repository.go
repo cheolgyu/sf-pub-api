@@ -24,8 +24,7 @@ func NewRepository(Conn *sqlx.DB) domain.MetaRepository {
 	return repo
 }
 func (obj *MetaRepository) init() (err error) {
-	obj.setMarketList()
-	obj.setPriceTypeList()
+	obj.setConfig()
 	obj.setColumnName("view_stock")
 	obj.setColumnName("view_market")
 	obj.setColumnName("hist.rebound")
@@ -38,19 +37,17 @@ func (obj *MetaRepository) setColumnName(tb_name string) (res []string, err erro
 	return res, err
 }
 
-func (obj *MetaRepository) setMarketList() (res []domain.Config, err error) {
-	if res, err = obj.GetMarketList(context.TODO()); err != nil {
+func (obj *MetaRepository) setConfig() (res []domain.Config, err error) {
+	if res, err = obj.GetConfig(context.TODO()); err != nil {
 		log.Fatalln(err)
 	}
-	obj.MarketList = res
-	return res, err
-}
-
-func (obj *MetaRepository) setPriceTypeList() (res []domain.Config, err error) {
-	if res, err = obj.GetPriceTypeList(context.TODO()); err != nil {
-		log.Fatalln(err)
+	for i := 0; i < len(res); i++ {
+		if res[i].Upper_code == "market_type" {
+			obj.MarketList = append(obj.MarketList, res[i])
+		} else if res[i].Upper_code == "price_type" {
+			obj.PriceTypeList = append(obj.PriceTypeList, res[i])
+		}
 	}
-	obj.PriceTypeList = res
 	return res, err
 }
 
@@ -66,29 +63,13 @@ func (obj *MetaRepository) VarColumnName() map[string][]string {
 	return obj.ColumnName
 }
 
-func (obj *MetaRepository) GetMarketList(ctx context.Context) (res []domain.Config, err error) {
+func (obj *MetaRepository) GetConfig(ctx context.Context) (res []domain.Config, err error) {
 
-	q := `SELECT  *  FROM  meta.config where  upper_code = 'market_type' and code in ('KOSPI','KOSDAQ','KONEX') `
-	rows, err := obj.conn.Queryx(q)
-
-	for rows.Next() {
-		item := domain.Config{}
-
-		err = rows.StructScan(&item)
-		if err != nil {
-			log.Printf("GetMarketList:MapScan::error::::<%s>  \n", err)
-			panic(err)
-		}
-		res = append(res, item)
-
-	}
-
-	return res, err
-}
-
-func (obj *MetaRepository) GetPriceTypeList(ctx context.Context) (res []domain.Config, err error) {
-
-	q := `SELECT  *  FROM  meta.config where  upper_code = 'price_type' `
+	q := `
+	SELECT  *  FROM  meta.config where  upper_code = 'market_type' and code in ('KOSPI','KOSDAQ','KONEX')
+		union all
+	SELECT  *  FROM  meta.config where  upper_code = 'price_type'
+	`
 	rows, err := obj.conn.Queryx(q)
 
 	for rows.Next() {
