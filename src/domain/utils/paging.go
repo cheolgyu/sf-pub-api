@@ -29,7 +29,7 @@ func (obj *PagingStr) Set(query url.Values) {
 	obj.Desc = query.Get("desc")
 }
 
-func (obj *PagingStr) Valid(column_name map[string][]string, tb_name string) (res Paging, err error) {
+func (obj *PagingStr) Valid(sort_column_name map[string][]string, tb_name string) (res Paging, err error) {
 	var limit, offset int
 	var sort, desc string
 
@@ -40,9 +40,9 @@ func (obj *PagingStr) Valid(column_name map[string][]string, tb_name string) (re
 		res.Offset = offset
 	}
 
-	if sort, desc, err = obj.valid_sort_desc(column_name[tb_name]); err != nil {
+	if sort, desc, err = obj.valid_sort_desc(sort_column_name[tb_name]); err != nil {
 
-		res.Sort = column_name[tb_name][0]
+		res.Sort = sort_column_name[tb_name][0]
 		res.Desc = "desc"
 
 		log.Fatalln(err)
@@ -72,7 +72,7 @@ func (obj *PagingStr) valid_rows_page() (limit int, offsest int, err error) {
 	return limit, offset, err
 }
 
-func (obj *PagingStr) valid_sort_desc(column_name []string) (sort string, desc string, err error) {
+func (obj *PagingStr) valid_sort_desc(sort_column_name []string) (sort string, desc string, err error) {
 	var desc_bool bool
 
 	if desc_bool, err = strconv.ParseBool(obj.Desc); err != nil {
@@ -86,9 +86,9 @@ func (obj *PagingStr) valid_sort_desc(column_name []string) (sort string, desc s
 		}
 	}
 
-	for i := range column_name {
-		if column_name[i] == obj.Sort {
-			sort = column_name[i]
+	for i := range sort_column_name {
+		if sort_column_name[i] == obj.Sort {
+			sort = sort_column_name[i]
 			break
 		}
 	}

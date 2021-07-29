@@ -44,13 +44,13 @@ func (obj *PriceParamsString) Set(query url.Values) {
 	obj.Search = query.Get("search")
 }
 
-func (obj *PriceParamsString) Valid(market_list []Config, column_name map[string][]string, tb_name string) (res PriceParams, err error) {
+func (obj *PriceParamsString) Valid(market_list []Config, sort_column_name map[string][]string, tb_name string) (res PriceParams, err error) {
 	var paging utils.Paging
 	var search string
 	var market_type []int
 	var state map[string]bool
 
-	if paging, err = obj.PagingStr.Valid(column_name, tb_name); err != nil {
+	if paging, err = obj.PagingStr.Valid(sort_column_name, tb_name); err != nil {
 		log.Fatalln(err)
 	}
 	res.Paging = paging
@@ -69,7 +69,7 @@ func (obj *PriceParamsString) Valid(market_list []Config, column_name map[string
 		res.Market = market_type
 	}
 
-	if state, err = obj.valid_stock_state(column_name["company_state"]); err != nil {
+	if state, err = obj.valid_stock_state(sort_column_name["company_state"]); err != nil {
 		res.State = state
 		log.Fatalln(err)
 	} else {
@@ -112,19 +112,19 @@ func (obj *PriceParamsString) valid_marekt_type(market_list []Config) (marekt_ty
 	return marekt_type, err
 }
 
-func (obj *PriceParamsString) valid_stock_state(column_name []string) (res map[string]bool, err error) {
+func (obj *PriceParamsString) valid_stock_state(sort_column_name []string) (res map[string]bool, err error) {
 	res = make(map[string]bool)
 	inp_str := obj.State
 	inp_str = strings.TrimSpace(inp_str)
 
 	inp_arr := strings.Split(inp_str, ",")
 
-	for i := range column_name {
+	for i := range sort_column_name {
 		for j := range inp_arr {
 			key_val := strings.Split(inp_arr[j], "::")
 
 			if len(key_val) == 2 {
-				if column_name[i] == key_val[0] {
+				if sort_column_name[i] == key_val[0] {
 					if v, err := strconv.ParseBool(key_val[1]); err != nil {
 						log.Fatalln(err)
 					} else {
