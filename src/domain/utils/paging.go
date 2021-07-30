@@ -39,16 +39,24 @@ func (obj *PagingString) Valid(sort_column_name map[string][]string, tb_name str
 		res.Limit = limit
 		res.Offset = offset
 	}
+	if sort_column_name != nil {
+		if sort, desc, err = obj.valid_sort_desc(sort_column_name[tb_name]); err != nil {
 
-	if sort, desc, err = obj.valid_sort_desc(sort_column_name[tb_name]); err != nil {
+			res.Sort = sort_column_name[tb_name][0]
+			res.Desc = "desc"
 
-		res.Sort = sort_column_name[tb_name][0]
-		res.Desc = "desc"
-
-		log.Fatalln(err)
+			log.Fatalln(err)
+		} else {
+			res.Sort = sort
+			res.Desc = desc
+		}
 	} else {
-		res.Sort = sort
-		res.Desc = desc
+		res.Sort = obj.Sort
+		if obj.Desc == "true" {
+			res.Desc = "desc"
+		} else {
+			res.Desc = "asc"
+		}
 	}
 
 	return res, err

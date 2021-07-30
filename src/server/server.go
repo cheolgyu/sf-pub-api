@@ -14,6 +14,7 @@ import (
 	"github.com/cheolgyu/stock-read-pub-api/src/svc/company"
 	"github.com/cheolgyu/stock-read-pub-api/src/svc/meta"
 	"github.com/cheolgyu/stock-read-pub-api/src/svc/price"
+	"github.com/cheolgyu/stock-read-pub-api/src/svc/project"
 	"github.com/google/uuid"
 	"github.com/julienschmidt/httprouter"
 )
@@ -59,20 +60,6 @@ type ViewPriceResult struct {
 	Info   []map[string]interface{} `json:"info"`
 	Price  []map[string]interface{} `json:"price"`
 	Market []map[string]interface{} `json:"market"`
-}
-
-func HandlerMonthlyPeek(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	req_id := r.Header.Get("req_id")
-
-	list := service.GetMonthlyPeek(req_id, r)
-	json.NewEncoder(w).Encode(list)
-}
-
-func HandlerDayTrading(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	req_id := r.Header.Get("req_id")
-
-	list := service.GetDayTrading(req_id, r)
-	json.NewEncoder(w).Encode(list)
 }
 
 func HandlerInfo(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -153,8 +140,9 @@ func server() {
 	price_usecase := price.NewUsecase(price_repo, meta_repo, timeoutContext)
 	price.NewHandler(router, price_usecase)
 
-	router.GET("/day_trading", HandlerDayTrading)
-	router.GET("/monthly_peek", HandlerMonthlyPeek)
+	project_repo := project.NewRepository(db_conn)
+	project_usecase := project.NewUsecase(project_repo, meta_repo, timeoutContext)
+	project.NewHandler(router, project_usecase)
 
 	log.Fatal(http.ListenAndServe(port, m))
 }

@@ -26,7 +26,7 @@ func NewRepository(Conn *sqlx.DB) domain.MetaRepository {
 func (obj *MetaRepository) init() (err error) {
 	obj.setConfig()
 	var sort_table []string
-	sort_table = append(sort_table, "view_stock", "view_market", "rebound")
+	sort_table = append(sort_table, "view_stock", "view_market", "rebound", "view_monthly_peek")
 	for _, v := range sort_table {
 		if res, err := obj.setColumnName(v); err == nil {
 			obj.ColumnName[v] = res
