@@ -1,17 +1,15 @@
 package server
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"time"
 
-	"github.com/cheolgyu/stock-read-pub-api/src/config"
 	"github.com/cheolgyu/stock-read-pub-api/src/db"
-	"github.com/cheolgyu/stock-read-pub-api/src/service"
 	"github.com/cheolgyu/stock-read-pub-api/src/svc/company"
+	"github.com/cheolgyu/stock-read-pub-api/src/svc/info"
 	"github.com/cheolgyu/stock-read-pub-api/src/svc/meta"
 	"github.com/cheolgyu/stock-read-pub-api/src/svc/price"
 	"github.com/cheolgyu/stock-read-pub-api/src/svc/project"
@@ -56,34 +54,6 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	fmt.Fprint(w, msg)
 }
 
-type ViewPriceResult struct {
-	Info   []map[string]interface{} `json:"info"`
-	Price  []map[string]interface{} `json:"price"`
-	Market []map[string]interface{} `json:"market"`
-}
-
-func HandlerInfo(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	req_id := r.Header.Get("req_id")
-
-	res := ViewPriceResult{}
-	info := service.GetInfo(req_id)
-	res.Info = info
-	json.NewEncoder(w).Encode(res)
-}
-
-func ChkMarketCode(code string) (bool, int) {
-	is_market := false
-	idx := -1
-	for i := range config.MarketList {
-		if config.MarketList[i].Code == code {
-			idx = i
-			is_market = true
-			break
-		}
-	}
-	return is_market, idx
-}
-
 func setCors(w *http.ResponseWriter) {
 	header := (*w).Header()
 
@@ -111,22 +81,13 @@ func server() {
 	})
 
 	router.GET("/", Index)
-
-	router.GET("/info", HandlerInfo)
-
-	//router.GET("/price/bound/:code", HandlerPriceBound)
-
-	//router.GET("/config/market_list", HandlerMarketList)
-
-	// router.GET("/price", HandlerViewPrice)
-	// router.GET("/market", HandlerViewMarket)
-
-	//	router.GET("/detail/chartline/:code", HandlerDetailChartLine)
-	//router.GET("/detail/chart/:code", HandlerDetailChart)
-	//router.GET("/detail/company/:code", HandlerDetailCompany)
 	timeoutContext := time.Duration(2) * time.Second
 
 	db_conn := db.Conn()
+
+	info_repo := info.NewRepository(db_conn)
+	info_usecase := info.NewUsecase(info_repo, timeoutContext)
+	info.NewHandler(router, info_usecase)
 
 	meta_repo := meta.NewRepository(db_conn)
 	meta_usecase := meta.NewUsecase(meta_repo, timeoutContext)
