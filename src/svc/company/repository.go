@@ -45,10 +45,11 @@ left join public.view_monthly_peek mp on c.code_id = mp.code_id
 	err := obj.conn.QueryRow(pq).Scan(&item)
 
 	if err != nil {
-		log.Printf("<%s> error \n", err)
 		if err == sql.ErrNoRows {
 			// there were no rows, but otherwise no error occurred
+			err = nil
 		} else {
+			log.Printf("<%s> error \n", err)
 			log.Fatal(err)
 		}
 	}
@@ -111,10 +112,11 @@ FROM
 	err := obj.conn.QueryRow(pq).Scan(&item)
 
 	if err != nil {
-		log.Printf("<%s> error \n", err)
+
 		if err == sql.ErrNoRows {
 			// there were no rows, but otherwise no error occurred
 		} else {
+			log.Printf("<%s> error \n", err)
 			log.Fatal(err)
 		}
 	}
@@ -128,7 +130,7 @@ FROM
 func (obj *CompanyRepository) GetGraphNextLineByCode(ctx context.Context, code string) (string, error) {
 
 	q := `
-	select JSON_AGG(json_build_object(price_type ,
+	select JSON_AGG(json_build_object(mc.code ,
 		json_build_array(
 			json_build_object('x',
 			concat(SUBSTRING (x1::text,0,5),'-',SUBSTRING (x1::text,5,2),'-',SUBSTRING (x1::text,7,2)) 
@@ -141,7 +143,7 @@ func (obj *CompanyRepository) GetGraphNextLineByCode(ctx context.Context, code s
 			,'y',y3)
 		)
 	 ))
-	from project.tb_line dl  
+	from project.tb_line dl  left join meta.config mc on dl.price_type = mc.id 
 	where dl.code =  '%s'
 	`
 	pq := fmt.Sprintf(q, code)
@@ -150,10 +152,11 @@ func (obj *CompanyRepository) GetGraphNextLineByCode(ctx context.Context, code s
 	err := obj.conn.QueryRow(pq).Scan(&item)
 
 	if err != nil {
-		log.Printf("<%s> error \n", err)
+
 		if err == sql.ErrNoRows {
 			// there were no rows, but otherwise no error occurred
 		} else {
+			log.Printf("<%s> error \n", err)
 			log.Fatal(err)
 		}
 	}
