@@ -73,6 +73,8 @@ func (obj *MetaRepository) GetConfig(ctx context.Context) (res []domain.Config, 
 	SELECT  *  FROM  meta.config where  upper_code = 'market_type' and code in ('KOSPI','KOSDAQ','KONEX')
 		union all
 	SELECT  *  FROM  meta.config where  upper_code = 'price_type'
+		union all
+	SELECT  *  FROM  meta.config where  upper_code = 'unit_type'
 	`
 	rows, err := obj.conn.Queryx(q)
 

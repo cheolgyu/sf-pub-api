@@ -2,12 +2,9 @@ package server
 
 import (
 	"fmt"
-	"log"
 	"net/http"
-	"os"
 	"time"
 
-	"github.com/cheolgyu/stock-read-pub-api/src/db"
 	"github.com/cheolgyu/stock-read-pub-api/src/svc/company"
 	"github.com/cheolgyu/stock-read-pub-api/src/svc/info"
 	"github.com/cheolgyu/stock-read-pub-api/src/svc/meta"
@@ -15,15 +12,19 @@ import (
 	"github.com/cheolgyu/stock-read-pub-api/src/svc/project"
 	"github.com/google/uuid"
 	"github.com/julienschmidt/httprouter"
+
+	"github.com/cheolgyu/stock-write-common/db"
+	"github.com/cheolgyu/stock-write-common/env"
+	"github.com/cheolgyu/stock-write-common/logging"
 )
 
 var frontend_url string
 var port string
 
 func Exec(isDebug bool) {
-	frontend_url = os.Getenv("FRONTEND_URL")
-	port = ":" + os.Getenv("PORT")
-	log.Println("frontend_url", frontend_url)
+	frontend_url = env.MyEnv["FRONTEND_URL"]
+	port = ":" + env.MyEnv["PORT"]
+	logging.Log.Println("frontend_url", frontend_url)
 	server()
 }
 
@@ -40,7 +41,7 @@ func (m *Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	req_id := uuid.New().String()
 	r.Header.Add("req_id", req_id)
-	log.Printf("[Middleware] <%s> %s %s %s\n", req_id, r.RemoteAddr, r.Method, r.URL)
+	logging.Log.Printf("[Middleware] <%s> %s %s %s\n", req_id, r.RemoteAddr, r.Method, r.URL)
 	setCors(&w)
 	m.next.ServeHTTP(w, r)
 
@@ -49,7 +50,7 @@ func (m *Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	req_id := r.Header.Get("req_id")
-	log.Printf("<%s> \n ", req_id)
+	logging.Log.Printf("<%s> \n ", req_id)
 	msg := fmt.Sprintf("Welcome! %s\n", time.Now().String())
 	fmt.Fprint(w, msg)
 }
@@ -83,27 +84,25 @@ func server() {
 	router.GET("/", Index)
 	timeoutContext := time.Duration(2) * time.Second
 
-	db_conn := db.Conn()
-
-	info_repo := info.NewRepository(db_conn)
+	info_repo := info.NewRepository(db.Connect())
 	info_usecase := info.NewUsecase(info_repo, timeoutContext)
 	info.NewHandler(router, info_usecase)
 
-	meta_repo := meta.NewRepository(db_conn)
+	meta_repo := meta.NewRepository(db.Connect())
 	meta_usecase := meta.NewUsecase(meta_repo, timeoutContext)
 	meta.NewHandler(router, meta_usecase)
 
-	cmp_repo := company.NewRepository(db_conn)
+	cmp_repo := company.NewRepository(db.Connect())
 	cmp_usecase := company.NewUsecase(cmp_repo, meta_repo, timeoutContext)
 	company.NewHandler(router, cmp_usecase)
 
-	price_repo := price.NewRepository(db_conn)
+	price_repo := price.NewRepository(db.Connect())
 	price_usecase := price.NewUsecase(price_repo, meta_repo, timeoutContext)
 	price.NewHandler(router, price_usecase)
 
-	project_repo := project.NewRepository(db_conn)
+	project_repo := project.NewRepository(db.Connect())
 	project_usecase := project.NewUsecase(project_repo, meta_repo, timeoutContext)
 	project.NewHandler(router, project_usecase)
 
-	log.Fatal(http.ListenAndServe(port, m))
+	logging.Log.Fatal(http.ListenAndServe(port, m))
 }

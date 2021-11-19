@@ -66,9 +66,13 @@ func (obj *ProjectRepository) GetMonthlyPeekByPaging(ctx context.Context, params
 	log.Println("~~~~~~~ProjectRepository~~~~~~GetMonthlyPeekByPaging~~~~~~~~~~~~~~~~~~~~~~~")
 	q := `
 SELECT *
-from public.view_monthly_peek
+from PUBLIC.view_project_trading_volume
 WHERE 1 = 1 
+	and unit_type=  ` + fmt.Sprintf("%v", params.UnitType) + `
 	`
+	if params.UnitVal > 0 {
+		q += `and  max_unit =   ` + fmt.Sprintf("%v", params.UnitVal)
+	}
 	if len(params.Market) > 0 {
 		q += `and market_type in ( `
 		for i, v := range params.Market {

@@ -27,24 +27,33 @@ type ProjectParamsString struct {
 	PagingString utils.PagingString
 	Market       string
 	Term         string
+	UnitType     string
+	UnitVal      string
 }
 
 type ProjectParams struct {
-	Paging utils.Paging
-	Market []int
-	Term   int
+	Paging   utils.Paging
+	Market   []int
+	Term     int
+	UnitType int
+	UnitVal  int
 }
 
 func (obj *ProjectParamsString) Set(query url.Values) {
 	obj.PagingString.Set(query)
 	obj.Market = query.Get("market")
 	obj.Term = query.Get("term")
+	obj.UnitType = query.Get("unit_type")
+	obj.UnitVal = query.Get("unit_val")
+
 }
 
 func (obj *ProjectParamsString) Valid(market_list []Config, sort_column_name map[string][]string, tb_name string) (res ProjectParams, err error) {
 	var paging utils.Paging
 	var market_type []int
 	var term int
+	var unit_type int
+	var unit_val int
 
 	if paging, err = obj.PagingString.Valid(sort_column_name, tb_name); err != nil {
 		log.Fatalln(err)
@@ -62,6 +71,13 @@ func (obj *ProjectParamsString) Valid(market_list []Config, sort_column_name map
 		log.Println(err)
 	} else {
 		res.Term = term
+	}
+
+	if unit_type, unit_val, err = obj.valid_unit_type(); err != nil {
+		log.Println(err)
+	} else {
+		res.UnitType = unit_type
+		res.UnitVal = unit_val
 	}
 
 	return res, err
@@ -102,4 +118,21 @@ func (obj *ProjectParamsString) valid_term() (term int, err error) {
 	}
 
 	return term, err
+}
+
+func (obj *ProjectParamsString) valid_unit_type() (unit_type int, unit_val int, err error) {
+	if obj.UnitType != "" {
+		var num int
+		if num, err = strconv.Atoi(obj.UnitType); err != nil {
+			log.Println(err)
+		}
+		unit_type = num
+
+		if num, err = strconv.Atoi(obj.UnitVal); err != nil {
+			log.Println(err)
+		}
+		unit_val = num
+	}
+
+	return unit_type, unit_val, err
 }

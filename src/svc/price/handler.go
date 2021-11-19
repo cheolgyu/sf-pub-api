@@ -19,8 +19,8 @@ func NewHandler(r *httprouter.Router, cmp_usecase domain.PriceUsecase) {
 	h := Handler{usecase: cmp_usecase}
 	//chk := CheckHandler{}
 
-	r.GET("/price/stock", h.GetStockByPaging)
-	r.GET("/price/market", h.GetMarketByPaging)
+	r.GET("/price/rebound/stock", h.GetStockByPaging)
+	r.GET("/price/rebound/market", h.GetMarketByPaging)
 
 }
 

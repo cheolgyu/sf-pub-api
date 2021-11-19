@@ -20,7 +20,7 @@ func NewRepository(Conn *sqlx.DB) domain.InfoRepository {
 
 func (obj *InfoRepository) GetUpdateTime(ctx context.Context) (string, error) {
 
-	q := `SELECT updated  FROM info where name = 'updated'`
+	q := `SELECT updated  FROM info where name = 'rebound_updated'`
 	log.Println(q)
 	var item string
 	err := obj.conn.QueryRow(q).Scan(&item)

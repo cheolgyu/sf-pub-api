@@ -8,7 +8,7 @@
         {
             "label": "api run",
             "type": "shell",
-            "command": " gin -i --appPort 5001  --port 5000  run  main.go ",
+            "command": " gin -i --appPort 5000  --port 5001  run  main.go ",
             "args": [],
             "problemMatcher": [
                 "$tsc"

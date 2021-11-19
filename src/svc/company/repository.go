@@ -30,16 +30,22 @@ Select JSON_BUILD_OBJECT('c',
 	ROW_TO_JSON(cD.*),
 	's',
 	ROW_TO_JSON(cS.*),
-	 'peek',
-	ROW_TO_JSON(mp.*)
+	'volume',
+	 vtb.*
 					)
 from only public.company c 
 left join public.company_detail cd on c.code_id = cd.code_id
 left join public.company_state cs on c.code_id = cs.code_id
-left join public.view_monthly_peek mp on c.code_id = mp.code_id
+left join (
+	select 
+		json_agg(ROW_TO_JSON(t.*))
+	from 
+		PUBLIC.view_project_trading_volume t 
+	where  t.code = '%s'
+) vtb on 1=1 
 	WHERE C.CODE = '%s'
 	`
-	pq := fmt.Sprintf(q, code)
+	pq := fmt.Sprintf(q, code, code)
 	log.Println(pq)
 	var item sql.NullString
 	err := obj.conn.QueryRow(pq).Scan(&item)
