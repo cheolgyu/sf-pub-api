@@ -7,8 +7,8 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/cheolgyu/stock-read-pub-api/src/domain"
-	"github.com/cheolgyu/stock-read-pub-api/src/domain/utils"
+	"github.com/cheolgyu/sf-pub-api/src/domain"
+	"github.com/cheolgyu/sf-pub-api/src/domain/utils"
 	"github.com/jmoiron/sqlx"
 )
 

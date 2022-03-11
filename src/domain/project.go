@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/cheolgyu/stock-read-pub-api/src/domain/utils"
+	"github.com/cheolgyu/sf-pub-api/src/domain/utils"
 )
 
 type Project struct {

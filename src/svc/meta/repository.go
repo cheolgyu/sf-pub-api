@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/cheolgyu/stock-read-pub-api/src/domain"
+	"github.com/cheolgyu/sf-pub-api/src/domain"
 	"github.com/jmoiron/sqlx"
 )
 

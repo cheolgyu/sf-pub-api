@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/cheolgyu/stock-read-pub-api/src/server"
+	"github.com/cheolgyu/sf-pub-api/src/server"
 )
 
 /*

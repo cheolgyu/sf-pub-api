@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/cheolgyu/stock-read-pub-api/src/domain"
+	"github.com/cheolgyu/sf-pub-api/src/domain"
 	"github.com/julienschmidt/httprouter"
 )
 
