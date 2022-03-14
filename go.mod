@@ -1,4 +1,4 @@
-module github.com/cheolgyu/sf-pub-api
+module github.com/cheolgyu/pubapi
 
 go 1.16
 

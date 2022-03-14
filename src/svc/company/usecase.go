@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/cheolgyu/sf-pub-api/src/domain"
+	"github.com/cheolgyu/pubapi/src/domain"
 )
 
 type CompanyUsecase struct {

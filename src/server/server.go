@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/cheolgyu/sf-pub-api/src/svc/company"
-	"github.com/cheolgyu/sf-pub-api/src/svc/info"
-	"github.com/cheolgyu/sf-pub-api/src/svc/meta"
-	"github.com/cheolgyu/sf-pub-api/src/svc/price"
-	"github.com/cheolgyu/sf-pub-api/src/svc/project"
+	"github.com/cheolgyu/pubapi/src/svc/company"
+	"github.com/cheolgyu/pubapi/src/svc/info"
+	"github.com/cheolgyu/pubapi/src/svc/meta"
+	"github.com/cheolgyu/pubapi/src/svc/price"
+	"github.com/cheolgyu/pubapi/src/svc/project"
 	"github.com/google/uuid"
 	"github.com/julienschmidt/httprouter"
 

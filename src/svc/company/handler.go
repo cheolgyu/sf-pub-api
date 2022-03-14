@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/cheolgyu/sf-pub-api/src/domain"
+	"github.com/cheolgyu/pubapi/src/domain"
 	"github.com/julienschmidt/httprouter"
 )
 

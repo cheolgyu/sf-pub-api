@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/cheolgyu/sf-pub-api/src/domain"
+	"github.com/cheolgyu/pubapi/src/domain"
 	"github.com/jmoiron/sqlx"
 )
 

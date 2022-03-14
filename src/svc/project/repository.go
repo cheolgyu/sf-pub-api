@@ -6,8 +6,8 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/cheolgyu/sf-pub-api/src/domain"
-	"github.com/cheolgyu/sf-pub-api/src/domain/utils"
+	"github.com/cheolgyu/pubapi/src/domain"
+	"github.com/cheolgyu/pubapi/src/domain/utils"
 	"github.com/jmoiron/sqlx"
 )
 

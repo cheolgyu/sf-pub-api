@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/cheolgyu/sf-pub-api/src/domain/utils"
+	"github.com/cheolgyu/pubapi/src/domain/utils"
 )
 
 type Price struct {
