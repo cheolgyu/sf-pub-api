@@ -13,9 +13,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/julienschmidt/httprouter"
 
-	"github.com/cheolgyu/sbm-base/db"
-	"github.com/cheolgyu/sbm-base/env"
-	"github.com/cheolgyu/sbm-base/logging"
+	"github.com/cheolgyu/base/db"
+	"github.com/cheolgyu/base/env"
+	"github.com/cheolgyu/base/logging"
 )
 
 var frontend_url string

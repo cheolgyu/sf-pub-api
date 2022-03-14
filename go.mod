@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/BurntSushi/toml v0.4.1 // indirect
-	github.com/cheolgyu/sbm-base v0.0.0
+	github.com/cheolgyu/base v0.0.0
 	github.com/google/uuid v1.2.0
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/joho/godotenv v1.4.0
@@ -12,6 +12,6 @@ require (
 )
 
 replace (
-	github.com/cheolgyu/sbm-base v0.0.0 => ../sbm-base
-	github.com/cheolgyu/sbm-struct v0.0.0 => ../sbm-struct
+	github.com/cheolgyu/base v0.0.0 => ../base
+	github.com/cheolgyu/model v0.0.0 => ../model
 )
