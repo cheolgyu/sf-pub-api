@@ -40,7 +40,7 @@ left join (
 	select 
 		json_agg(ROW_TO_JSON(t.*))
 	from 
-		PUBLIC.view_project_trading_volume t 
+		PUBLIC.view_volume t 
 	where  t.code = '%s'
 ) vtb on 1=1 
 	WHERE C.CODE = '%s'
